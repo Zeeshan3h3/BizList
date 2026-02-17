@@ -12,6 +12,7 @@ const bookingController = require('./controllers/bookingController');
 const searchController = require('./controllers/searchController');
 const autocompleteController = require('./controllers/autocompleteController');
 const suggestionsController = require('./controllers/suggestionsController');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -80,12 +81,20 @@ app.get('/api/bookings', bookingController.getAllBookings);
 // Legacy endpoint (backward compatibility)
 app.post('/api/analyze-business', auditController.runBusinessAudit);
 
-// 404 handler
-app.use((req, res) => {
-    res.status(404).json({
-        error: 'Route not found'
-    });
+// Serve static files from the React client
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+// Handle React routing, return all requests to React app
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
 });
+
+// 404 handler (API only, if needed, or rely on React's 404)
+// app.use((req, res) => {
+//     res.status(404).json({
+//         error: 'Route not found'
+//     });
+// });
 
 // Error handler
 app.use((err, req, res, next) => {
