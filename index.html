@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Check if your business is visible online. Get your free Digital Health Score and discover what's missing from Google Maps, JustDial, and Facebook.">
+    <meta name="keywords" content="business online presence, digital health score, local business SEO, Google Maps listing">
+    
+    <title>Is Your Business Online? | Free Digital Health Check</title>
+    
+    <!-- Preconnect for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Is Your Business <span class="gradient-text">Invisible</span> Online?
+                </h1>
+                <p class="hero-subtitle">
+                    90% of customers search online before visiting. Find out in 30 seconds if they can find <strong>you</strong>.
+                </p>
+                
+                <!-- Search Form -->
+                <div class="search-card" id="searchCard">
+                    <div class="search-form">
+                        <div class="form-group">
+                            <label for="businessName">Business Name</label>
+                            <input 
+                                type="text" 
+                                id="businessName" 
+                                placeholder="e.g., Sharma Medical Store"
+                                autocomplete="off"
+                                required
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="area">Area / City</label>
+                            <input 
+                                type="text" 
+                                id="area" 
+                                placeholder="e.g., Connaught Place, Delhi"
+                                autocomplete="off"
+                                required
+                            >
+                        </div>
+                        
+                        <button type="button" class="btn-primary" id="checkButton">
+                            <span class="btn-text">Check My Digital Score</span>
+                            <svg class="btn-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="trust-indicators">
+                        <div class="trust-item">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>100% Free</span>
+                        </div>
+                        <div class="trust-item">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>No Signup Required</span>
+                        </div>
+                        <div class="trust-item">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M13.5 4.5L6 12L2.5 8.5" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            <span>Instant Results</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Loading Section (Hidden by default) -->
+    <section class="loading-section hidden" id="loadingSection">
+        <div class="container">
+            <div class="loading-card">
+                <div class="loading-spinner"></div>
+                <h2 class="loading-title">Analyzing Your Digital Presence...</h2>
+                <p class="loading-text" id="loadingText">Searching Google Maps...</p>
+                <div class="loading-progress">
+                    <div class="loading-progress-bar" id="progressBar"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section (Hidden by default) -->
+    <section class="results-section hidden" id="resultsSection">
+        <div class="container">
+            <!-- Score Card -->
+            <div class="score-card">
+                <h2 class="section-title">Your Digital Health Score</h2>
+                <div class="score-display">
+                    <div class="score-circle" id="scoreCircle">
+                        <svg class="score-svg" viewBox="0 0 200 200">
+                            <circle class="score-bg" cx="100" cy="100" r="90"></circle>
+                            <circle class="score-progress" cx="100" cy="100" r="90" id="scoreProgressCircle"></circle>
+                        </svg>
+                        <div class="score-content">
+                            <div class="score-number" id="scoreNumber">0</div>
+                            <div class="score-label">out of 100</div>
+                        </div>
+                    </div>
+                    <div class="score-message" id="scoreMessage">
+                        <h3 id="scoreTitle">Your Business Needs Attention</h3>
+                        <p id="scoreDescription">You're missing out on potential customers. Let's fix this.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Breakdown -->
+            <div class="breakdown-grid">
+                <!-- Google Maps Card -->
+                <div class="breakdown-card">
+                    <div class="breakdown-header">
+                        <img src="https://www.google.com/images/branding/googleg/1x/googleg_standard_color_128dp.png" alt="Google" class="platform-icon">
+                        <h3>Google Maps</h3>
+                        <span class="breakdown-score" id="googleScore">0/40</span>
+                    </div>
+                    <ul class="breakdown-list" id="googleBreakdown">
+                        <li class="loading-item">Loading...</li>
+                    </ul>
+                </div>
+
+                <!-- JustDial Card -->
+                <div class="breakdown-card">
+                    <div class="breakdown-header">
+                        <div class="platform-icon justdial-icon">JD</div>
+                        <h3>JustDial</h3>
+                        <span class="breakdown-score" id="justdialScore">0/25</span>
+                    </div>
+                    <ul class="breakdown-list" id="justdialBreakdown">
+                        <li class="loading-item">Loading...</li>
+                    </ul>
+                </div>
+
+                <!-- Facebook Card -->
+                <div class="breakdown-card">
+                    <div class="breakdown-header">
+                        <svg class="platform-icon" viewBox="0 0 24 24" fill="#1877F2">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                        <h3>Facebook</h3>
+                        <span class="breakdown-score" id="facebookScore">0/25</span>
+                    </div>
+                    <ul class="breakdown-list" id="facebookBreakdown">
+                        <li class="loading-item">Loading...</li>
+                    </ul>
+                </div>
+
+                <!-- Website Quality Card -->
+                <div class="breakdown-card">
+                    <div class="breakdown-header">
+                        <svg class="platform-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10" stroke-width="2"/>
+                            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke-width="2"/>
+                        </svg>
+                        <h3>Website</h3>
+                        <span class="breakdown-score" id="websiteScore">0/10</span>
+                    </div>
+                    <ul class="breakdown-list" id="websiteBreakdown">
+                        <li class="loading-item">Loading...</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- CTA Section -->
+            <div class="cta-card" id="ctaCard">
+                <div class="cta-content">
+                    <h2 class="cta-title">Ready to Fix This?</h2>
+                    <p class="cta-description">
+                        We'll get your business fully online in <strong>7 days</strong>. Google Maps setup, website creation, social media presence - everything you need.
+                    </p>
+                    <div class="cta-price">
+                        <span class="price-label">Complete Digital Makeover</span>
+                        <span class="price-amount">₹5,000</span>
+                        <span class="price-note">One-time setup fee</span>
+                    </div>
+                    <button class="btn-cta" id="bookCallButton">
+                        <span>Book a Free Consultation</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="cta-features">
+                    <div class="feature-item">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M20 6L9 17L4 12" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Google Maps listing optimized</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M20 6L9 17L4 12" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Professional website created</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M20 6L9 17L4 12" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>Social media setup</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M20 6L9 17L4 12" stroke="#4ade80" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span>7-day delivery guarantee</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal for Booking Call -->
+    <div class="modal hidden" id="bookingModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="18" y1="6" x2="6" y2="18" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="6" y1="6" x2="18" y2="18" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <h2 class="modal-title">Book Your Free Consultation</h2>
+            <p class="modal-subtitle">Let's discuss how we can boost your online presence</p>
+            <form class="booking-form" id="bookingForm">
+                <div class="form-group">
+                    <label for="contactName">Your Name</label>
+                    <input type="text" id="contactName" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactPhone">Phone Number</label>
+                    <input type="tel" id="contactPhone" placeholder="+91 XXXXX XXXXX" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactEmail">Email (Optional)</label>
+                    <input type="email" id="contactEmail" placeholder="your@email.com">
+                </div>
+                <button type="submit" class="btn-primary">
+                    <span>Schedule Call</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
