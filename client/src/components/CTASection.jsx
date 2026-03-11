@@ -1,8 +1,22 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import Button from './ui/Button';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const CTASection = ({ onBookingClick }) => {
+const CTASection = () => {
+    const [showForm, setShowForm] = useState(false);
+    const [formData, setFormData] = useState({ name: '', phone: '' });
+    const [submitted, setSubmitted] = useState(false);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setSubmitted(true);
+        // Reset after 3 seconds
+        setTimeout(() => {
+            setShowForm(false);
+            setSubmitted(false);
+            setFormData({ name: '', phone: '' });
+        }, 3000);
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -14,40 +28,110 @@ const CTASection = ({ onBookingClick }) => {
                 {/* Left: CTA Content */}
                 <div>
                     <h2 className="text-3xl font-heading font-bold mb-4">
-                        Ready to Fix This?
+                        Let's fix your score and grow your business.
                     </h2>
-                    <p className="text-slate-600 text-lg mb-6">
-                        We'll get your business fully online in <strong className="text-slate-800">7 days</strong>.
-                        Google Maps setup, website creation, social media presence - everything you need.
+                    <p className="text-slate-600 text-lg mb-8">
+                        Choose how you want to connect with our experts:
                     </p>
 
-                    <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-xl p-6 mb-6">
-                        <div className="text-sm text-slate-600 mb-2">Complete Digital Makeover</div>
-                        <div className="text-4xl font-bold gradient-text mb-1">₹5,000</div>
-                        <div className="text-sm text-slate-500">One-time setup fee</div>
-                    </div>
+                    <div className="space-y-4 max-w-sm">
+                        {/* WhatsApp */}
+                        <a
+                            href="https://wa.me/919088260058?text=I'm%20interested%20in%20growing%20my%20business%20online"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#20bd5a] text-white py-3.5 px-6 rounded-xl font-bold transition-transform hover:-translate-y-1 shadow-lg shadow-green-500/30"
+                        >
+                            🟢 WhatsApp Us (Instant Reply)
+                        </a>
 
-                    <Button
-                        variant="primary"
-                        className="w-full md:w-auto text-lg"
-                        onClick={onBookingClick}
-                        icon={
-                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                <path d="M7.5 15L12.5 10L7.5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        }
-                    >
-                        Book a Free Consultation
-                    </Button>
+                        {/* Call */}
+                        <a
+                            href="tel:+919088260058"
+                            className="w-full flex items-center justify-center gap-3 bg-slate-800 hover:bg-slate-700 text-white py-3.5 px-6 rounded-xl font-bold transition-transform hover:-translate-y-1 shadow-lg shadow-slate-800/30"
+                        >
+                            📞 Call +91 9088260058
+                        </a>
+
+                        {/* Callback Button */}
+                        {!showForm && (
+                            <button
+                                onClick={() => setShowForm(true)}
+                                className="w-full flex items-center justify-center gap-3 bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-700 py-3.5 px-6 rounded-xl font-bold transition-all hover:-translate-y-1 hover:shadow-md"
+                            >
+                                🗓️ Request a Callback
+                            </button>
+                        )}
+
+                        {/* Callback Form */}
+                        <AnimatePresence>
+                            {showForm && (
+                                <motion.form
+                                    initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                                    animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
+                                    exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                                    onSubmit={handleSubmit}
+                                    className="bg-white border border-slate-200 p-5 rounded-xl shadow-sm overflow-hidden"
+                                >
+                                    {submitted ? (
+                                        <div className="text-center py-4 text-emerald-600 font-bold flex flex-col items-center gap-2">
+                                            <span className="text-2xl">✅</span>
+                                            We'll call you shortly!
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-4">
+                                            <div>
+                                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Name</label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    value={formData.name}
+                                                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                                    className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
+                                                    placeholder="John Doe"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Phone Number</label>
+                                                <input
+                                                    type="tel"
+                                                    required
+                                                    value={formData.phone}
+                                                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                                    className="w-full px-4 py-2.5 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
+                                                    placeholder="+91 98765 43210"
+                                                />
+                                            </div>
+                                            <div className="flex gap-2 pt-2">
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowForm(false)}
+                                                    className="flex-1 py-2.5 px-4 rounded-lg font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors"
+                                                >
+                                                    Cancel
+                                                </button>
+                                                <button
+                                                    type="submit"
+                                                    className="flex-[2] py-2.5 px-4 rounded-lg font-bold text-white bg-indigo-600 hover:bg-indigo-500 transition-colors shadow-md shadow-indigo-600/20"
+                                                >
+                                                    Request Callback
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </motion.form>
+                            )}
+                        </AnimatePresence>
+                    </div>
                 </div>
 
                 {/* Right: Features List */}
                 <div className="space-y-4">
                     {[
-                        'Google Maps listing optimized',
-                        'Professional website created',
-                        'Social media setup',
-                        '7-day delivery guarantee',
+                        'Custom Website Design',
+                        'Local SEO & Google Maps',
+                        'Expert Strategy Consultation',
+                        'Full-Service Digital Solutions',
                     ].map((feature, index) => (
                         <div key={index} className="flex items-center gap-3">
                             <div className="flex-shrink-0">

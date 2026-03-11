@@ -6,10 +6,11 @@ const LoadingScreen = () => {
     const [messageIndex, setMessageIndex] = useState(0);
 
     const messages = [
-        'Searching Google Maps...',
-        'Checking JustDial...',
-        'Analyzing Facebook presence...',
-        'Calculating your score...',
+        'Searching Local Market Data...',
+        'Extracting Competitor Intel...',
+        'Analyzing Social Presence...',
+        'Calculating Revenue Leakage...',
+        'Generating Strategy Score...',
     ];
 
     useEffect(() => {

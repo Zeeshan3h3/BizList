@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SignedIn, SignedOut } from "@clerk/clerk-react";
@@ -14,12 +14,17 @@ import CustomUserMenu from './CustomUserMenu';
  */
 const Navbar = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const location = useLocation();
+
+    // Determine if we are currently in Pro Mode based on the URL
+    const isProMode = location.pathname.startsWith('/pro');
 
     const navLinks = [
-        { name: 'Home', path: '/' },
-        { name: 'Check Score', path: '/#check-score' },
+        { name: 'Home', path: isProMode ? '/pro' : '/' },
+        { name: 'Recent Audits', path: isProMode ? '/pro/recent-audits' : '/recent-audits' },
         { name: 'Listings', path: '/listings' },
         { name: 'Contact', path: '/contact' },
+        { name: 'About', path: '/about' }
     ];
 
     return (
@@ -27,7 +32,7 @@ const Navbar = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
                     {/* Logo */}
-                    <Link to="/" className="flex items-center">
+                    <Link to={isProMode ? '/pro' : '/'} className="flex items-center">
                         <BizListLogo />
                     </Link>
 

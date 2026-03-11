@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import HomePage from './pages/HomePage';
 import ScorePage from './pages/ScorePage';
+import ProHome from './pages/ProHome';
+import ProPage from './pages/ProPage';
 import SignInPage from './pages/SignInPage';
 import SignUpPage from './pages/SignUpPage';
 import './index.css';
@@ -14,6 +16,9 @@ import LegalPage from './pages/LegalPage';
 import ContactPage from './pages/ContactPage';
 import AboutPage from './pages/AboutPage';
 import BlogPage from './pages/BlogPage';
+import TemplatesPage from './pages/TemplatesPage';
+import PricingPage from './pages/PricingPage';
+import RecentAuditsPage from './pages/RecentAuditsPage';
 
 /**
  * Main App Component
@@ -27,6 +32,8 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/check" element={<ScorePage />} />
+          <Route path="/pro" element={<ProHome />} />
+          <Route path="/pro/scan" element={<ProPage />} />
 
           {/* Auth Routes */}
           <Route path="/sign-in/*" element={<SignInPage />} />
@@ -36,6 +43,10 @@ function App() {
           {/* Connect Pages */}
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/audits" element={<RecentAuditsPage />} />
+          <Route path="/pro/audits" element={<RecentAuditsPage />} />
+          <Route path="/templates" element={<TemplatesPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
           <Route path="/blog" element={<BlogPage />} />
 
           {/* Legal Pages */}

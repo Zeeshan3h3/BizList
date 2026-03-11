@@ -53,12 +53,10 @@ const QUEUE_CONFIG = {
 
     /**
      * interval: Minimum time (ms) between starting tasks
-     * - 12000ms = 12 seconds
-     * - Why 12 seconds? Based on testing, Google doesn't flag this rate
-     * - Too fast (<10s) = higher ban risk
-     * - Too slow (>20s) = users wait too long
+     * - Phase 4 Speed Upgrade: Reduced from 12000ms to 10ms 
+     * - The scraper is now fast enough (~4s) that we don't need a massive artificial queue block
      */
-    interval: 12000,
+    interval: 10,
 
     /**
      * intervalCap: Max tasks per interval
@@ -69,11 +67,16 @@ const QUEUE_CONFIG = {
 
     /**
      * timeout: Max time (ms) a single task can run
-     * - 45000ms = 45 seconds
-     * - If scraper takes longer, it's killed and returns error
-     * - Prevents stuck requests from blocking the queue forever
+     * - 120000ms = 120 seconds (increased from 45s to allow slower scrapes)
+     * - If scraper takes longer, it throws a TimeoutError
      */
-    timeout: 45000,
+    timeout: 120000,
+
+    /**
+     * throwOnTimeout: If a task times out, throw an error instead of returning undefined.
+     * Prevents backend crash.
+     */
+    throwOnTimeout: true,
 
     /**
      * autoStart: Whether to process queue automatically

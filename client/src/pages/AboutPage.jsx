@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { Target, Users, Zap } from 'lucide-react';
+// eslint-disable-next-line no-unused-vars
+import { motion } from 'framer-motion';
 import PageWrapper from '../components/layout/PageWrapper';
 
 const AboutPage = () => {
@@ -27,36 +29,42 @@ const AboutPage = () => {
 
     const team = [
         {
-            name: "Alex Morgan",
+            name: "Md Zeeshan",
             role: "Founder & CEO",
-            image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400"
-        },
-        {
-            name: "Sarah Chen",
-            role: "Head of Engineering",
-            image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400"
-        },
-        {
-            name: "Michael Ross",
-            role: "Product Design",
-            image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400"
+            image: "/founder.jpg"
         }
     ];
 
     return (
         <PageWrapper>
-            <div className="bg-white min-h-screen pt-32 pb-20">
+            <div className="bg-white min-h-screen">
                 {/* Hero */}
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-20 text-center">
-                    <h1 className="text-4xl md:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
-                        Empowering Local Business <br />
-                        <span className="text-blue-600">In The Digital Age</span>
-                    </h1>
-                    <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-                        BizList was founded on a simple premise: every business deserves to be found online.
-                        We provide the tools and insights necessary to turn digital confusion into clear, actionable growth strategies.
-                    </p>
-                </div>
+                <section className="relative pt-32 pb-24 overflow-hidden bg-gradient-to-br from-indigo-900 to-slate-900">
+                    {/* Background Modern Glows */}
+                    <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-blue-500/20 rounded-full blur-[100px] opacity-70 pointer-events-none"></div>
+                    <div className="absolute bottom-10 left-1/4 w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-[120px] opacity-60 pointer-events-none"></div>
+
+                    <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                        <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6 }}
+                            className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight font-heading"
+                        >
+                            Empowering Local Business <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">In The Digital Age</span>
+                        </motion.h1>
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            className="text-xl text-indigo-100 max-w-3xl mx-auto leading-relaxed"
+                        >
+                            BizCheck was founded on a simple premise: every business deserves to be found online.
+                            We provide the tools and insights necessary to turn digital confusion into clear, actionable growth strategies.
+                        </motion.p>
+                    </div>
+                </section>
 
                 {/* Values Grid */}
                 <div className="bg-slate-50 py-20">
@@ -84,7 +92,7 @@ const AboutPage = () => {
                         <h2 className="text-3xl font-bold text-slate-900 mb-4">Meet The Team</h2>
                         <p className="text-slate-600">The minds behind the platform.</p>
                     </div>
-                    <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                    <div className="flex justify-center gap-8 max-w-5xl mx-auto">
                         {team.map((member, i) => (
                             <div key={i} className="text-center group">
                                 <div className="relative overflow-hidden rounded-2xl mb-6 aspect-square max-w-[280px] mx-auto">
@@ -105,10 +113,15 @@ const AboutPage = () => {
                 <div className="max-w-4xl mx-auto px-4 text-center bg-blue-600 rounded-3xl p-12 text-white relative overflow-hidden mx-4 md:mx-auto">
                     <div className="relative z-10">
                         <h2 className="text-3xl font-bold mb-6">Ready to grow your business?</h2>
-                        <p className="text-blue-100 mb-8 max-w-xl mx-auto">Join over 10,000 businesses using BizList to improve their online presence today.</p>
-                        <button className="bg-white text-blue-600 px-8 py-3 rounded-xl font-bold hover:bg-blue-50 transition-colors shadow-lg">
+                        <p className="text-blue-100 mb-8 max-w-xl mx-auto">Join over 10,000 businesses using BizCheck to improve their online presence today.</p>
+                        <a
+                            href="https://wa.me/919088260058?text=I'm%20interested%20in%20BizCheck%20services%20to%20grow%20my%20business."
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="bg-white text-blue-600 px-8 py-3 rounded-xl font-bold hover:bg-blue-50 transition-colors shadow-lg inline-block"
+                        >
                             Get Started Free
-                        </button>
+                        </a>
                     </div>
                     {/* Background decoration */}
                     <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2"></div>

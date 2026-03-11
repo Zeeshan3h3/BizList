@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useUser, useClerk } from '@clerk/clerk-react';
-import { LogOut, User, Settings, ChevronDown } from 'lucide-react';
+import { LogOut, User, Settings, ChevronDown, Briefcase } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const CustomUserMenu = () => {
@@ -8,6 +9,19 @@ const CustomUserMenu = () => {
     const { signOut, openUserProfile } = useClerk();
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    const isProMode = location.pathname.startsWith('/pro');
+
+    const handleModeSwitch = () => {
+        if (isProMode) {
+            navigate('/');
+        } else {
+            navigate('/pro');
+        }
+        setIsOpen(false);
+    };
 
     // Close when clicking outside
     useEffect(() => {
@@ -84,6 +98,26 @@ const CustomUserMenu = () => {
 
                         {/* Menu Items */}
                         <div className="p-2">
+                            {/* Mode Toggle */}
+                            <button
+                                onClick={handleModeSwitch}
+                                className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors group"
+                            >
+                                <div className="flex items-center space-x-3 text-slate-700">
+                                    <div className={`p-2 rounded-lg transition-colors ${isProMode ? 'bg-indigo-100 text-indigo-600 group-hover:bg-indigo-200' : 'bg-green-100 text-green-600 group-hover:bg-green-200'}`}>
+                                        <Briefcase className="w-4 h-4" />
+                                    </div>
+                                    <div className="flex flex-col items-start">
+                                        <span className="leading-tight">{isProMode ? 'Pro Mode' : 'Business Mode'}</span>
+                                        <span className="text-[10px] text-slate-400 font-normal mt-0.5">Switch view</span>
+                                    </div>
+                                </div>
+                                <div className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full transition-colors duration-200 ease-in-out focus:outline-none ${isProMode ? 'bg-indigo-500' : 'bg-slate-300'}`}>
+                                    <span className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isProMode ? 'translate-x-4' : 'translate-x-1'}`} />
+                                </div>
+                            </button>
+
+                            <div className="h-px bg-slate-100 my-1 mx-3" />
                             <button
                                 onClick={() => {
                                     openUserProfile();

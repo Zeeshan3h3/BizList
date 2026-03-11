@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import BusinessCard from './BusinessCard';
 import Button from './ui/Button';
 import Input from './ui/Input';
@@ -50,12 +50,12 @@ export default function BusinessSearchSelector({ onAuditStart }) {
                 const text = await response.text();
                 try {
                     data = JSON.parse(text);
-                } catch (e) {
+                } catch {
                     console.error('Failed to parse response as JSON:', text);
                     throw new Error(`Server error: ${response.status} ${response.statusText}`);
                 }
-            } catch (e) {
-                throw new Error(`Network error: ${e.message}`);
+            } catch (networkError) {
+                throw new Error(`Network error: ${networkError.message}`);
             }
 
             if (!response.ok) {
@@ -230,20 +230,23 @@ export default function BusinessSearchSelector({ onAuditStart }) {
 
             .search-button {
                 width: 100%;
-            padding: 24px !important;    /* Taller button */
-            font-size: 22px !important;  /* Larger text */
-            font-weight: 800 !important; /* Bold */
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.4), 0 10px 10px -5px rgba(59, 130, 246, 0.2);
-            transition: all 0.3s;
-            border-radius: 12px;
-                }
+                padding: 24px !important;    /* Taller button */
+                font-size: 20px !important;  /* Larger text */
+                font-weight: 800 !important; /* Bold */
+                letter-spacing: 0.5px;
+                text-transform: uppercase;
+                background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+                color: white !important;
+                border: none !important;
+                box-shadow: 0 20px 25px -5px rgba(124, 58, 237, 0.4), 0 10px 10px -5px rgba(124, 58, 237, 0.2);
+                transition: all 0.3s;
+                border-radius: 12px;
+            }
 
             .search-button:hover {
-                transform: translateY(-3px);
-            box-shadow: 0 25px 30px -5px rgba(59, 130, 246, 0.5);
-                }
+                transform: translateY(-3px) scale(1.02);
+                box-shadow: 0 25px 30px -5px rgba(124, 58, 237, 0.6);
+            }
 
             /* Autocomplete Wrapper */
             .autocomplete-wrapper {

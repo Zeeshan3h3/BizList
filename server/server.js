@@ -1,7 +1,21 @@
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 require('dotenv').config();
+
+// Safety: Handle uncaught exceptions and unhandled rejections gracefully
+process.on('uncaughtException', (err) => {
+    console.error('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+    console.error(err.name, err.message, err.stack);
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (err) => {
+    console.error('UNHANDLED REJECTION! 💥');
+    console.error(err);
+    // In a real production scenario, gracefully close server before exiting
+});
 
 // Database
 const connectDB = require('./config/database');
@@ -13,28 +27,37 @@ const searchController = require('./controllers/searchController');
 const autocompleteController = require('./controllers/autocompleteController');
 const suggestionsController = require('./controllers/suggestionsController');
 const path = require('path');
+const validate = require('./middlewares/validate');
+const schemas = require('./validators/schemas');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// ============================================
-// DATABASE CONNECTION
-// ============================================
+//connection from DB
 connectDB();
 
-// ============================================
-// MIDDLEWARE
-// ============================================
+//MiddleWares
+app.use(helmet()); // Security headers for Safe Mode deployment
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Global rate limiting
+// Global rate limiting (generous for read endpoints)
 const globalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 20,
+    max: 100,
     message: {
         error: 'Too many requests from this IP, please try again later.'
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// Strict rate limit for heavy audit operations
+const auditLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 10,
+    message: {
+        error: 'Too many audit requests. Please try again later.'
     },
     standardHeaders: true,
     legacyHeaders: false,
@@ -57,29 +80,30 @@ app.get('/api/health', (req, res) => {
 });
 
 // Autocomplete route (for business name suggestions)
-app.post('/api/autocomplete', autocompleteController.getAutocompleteSuggestions);
+//google maps listing suggestions
+app.post('/api/autocomplete', validate(schemas.autocompleteSchema), autocompleteController.getAutocompleteSuggestions);
 
 // Search route (for business selection)
-app.post('/api/search-businesses', searchController.searchBusinesses);
+app.post('/api/search-businesses', validate(schemas.searchBusinessesSchema), searchController.searchBusinesses);
 
 // AI Suggestions route
-app.post('/api/suggestions', suggestionsController.getSuggestions);
+app.post('/api/suggestions', validate(schemas.suggestionsSchema), suggestionsController.getSuggestions);
 
 // User routes
 app.use('/api/users', require('./routes/userRoutes'));
 
 // Audit routes
-app.post('/api/audit', auditController.runBusinessAudit);
+app.post('/api/audit', auditLimiter, validate(schemas.runAuditSchema), auditController.runBusinessAudit);
 app.get('/api/audits/recent', auditController.getRecentAudits);
 app.get('/api/analytics', auditController.getAnalytics);
 app.get('/api/audit/queue-status', auditController.getQueueStatus);
 
 // Booking routes
-app.post('/api/bookings', bookingController.createBooking);
+app.post('/api/bookings', validate(schemas.createBookingSchema), bookingController.createBooking);
 app.get('/api/bookings', bookingController.getAllBookings);
 
 // Legacy endpoint (backward compatibility)
-app.post('/api/analyze-business', auditController.runBusinessAudit);
+app.post('/api/analyze-business', validate(schemas.runAuditSchema), auditController.runBusinessAudit);
 
 // Serve static files from the React client
 app.use(express.static(path.join(__dirname, '../client/dist')));
@@ -112,8 +136,8 @@ app.listen(PORT, () => {
 ╔═══════════════════════════════════════════════════════╗
 ║  BizCheck MERN API Server                             ║
 ║  Status: Running ✓                                    ║
-║  Port: ${PORT}                                           ║
-║  Environment: ${process.env.NODE_ENV || 'development'}                            ║
+║  Port: ${PORT}                                        ║
+║  Environment: ${process.env.NODE_ENV || 'development'}║
 ║  Stack: MongoDB + Express + React + Node              ║
 ║  Scraping: Puppeteer (12s queue)                      ║
 ╚═══════════════════════════════════════════════════════╝

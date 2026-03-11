@@ -17,14 +17,6 @@ const searchBusinesses = async (req, res) => {
     try {
         const { businessName, area } = req.body;
 
-        // Validation
-        if (!businessName || !area) {
-            return res.status(400).json({
-                error: 'Missing required fields',
-                message: 'Please provide both business name and area'
-            });
-        }
-
         console.log(`[SEARCH CONTROLLER] Searching: ${businessName} in ${area}`);
 
         // Search Google Maps

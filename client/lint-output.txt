@@ -1,0 +1,27 @@
+﻿
+C:\ROAD TO !L\Agency\lead-gen-tool\client\src\components\home\AgencyIntro.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\ROAD TO !L\Agency\lead-gen-tool\client\src\components\home\HeroSection.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\ROAD TO !L\Agency\lead-gen-tool\client\src\components\home\ProblemSection.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\ROAD TO !L\Agency\lead-gen-tool\client\src\components\pricing\PricingCard.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\ROAD TO !L\Agency\lead-gen-tool\client\src\components\templates\TemplateCard.jsx
+  2:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\ROAD TO !L\Agency\lead-gen-tool\client\src\pages\AboutPage.jsx
+  3:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\ROAD TO !L\Agency\lead-gen-tool\client\src\pages\PricingPage.jsx
+  4:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+C:\ROAD TO !L\Agency\lead-gen-tool\client\src\pages\TemplatesPage.jsx
+  4:10  error  'motion' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  no-unused-vars
+
+Γ£û 8 problems (8 errors, 0 warnings)
+

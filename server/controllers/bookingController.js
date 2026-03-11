@@ -14,15 +14,6 @@ async function createBooking(req, res) {
     try {
         const { name, phone, email, businessName, area, auditId } = req.body;
 
-        // Validation
-        if (!name || !phone || !businessName) {
-            return res.status(400).json({
-                success: false,
-                error: 'MISSING_FIELDS',
-                message: 'Please provide name, phone, and business name'
-            });
-        }
-
         // Create booking
         const booking = new Booking({
             name,

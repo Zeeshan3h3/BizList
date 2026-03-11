@@ -29,72 +29,13 @@ const auditSchema = new mongoose.Schema({
     },
 
     // Scraped Business Data
-    scrapedData: {
-        name: String,
-        rating: Number,
-        reviewCount: Number,
-        website: String,
-        phone: String,
-        address: String,
-        photos: [String],
-        hours: String,
-        icon: String,
-
-        // New Advanced Fields
-        isClaimed: { type: Boolean, default: true }, // Default to true to be safe
-        latestReviewDate: Date,
-        ownerResponseCount: { type: Number, default: 0 },
-        hasOwnerPhotos: { type: Boolean, default: false },
-        hoursMissing: { type: Boolean, default: false }
-    },
+    scrapedData: mongoose.Schema.Types.Mixed,
 
     // Health Score Results
-    healthScore: {
-        totalScore: {
-            type: Number,
-            min: 0,
-            max: 100
-        },
-        maxScore: Number,
-        percentage: Number,
-        status: {
-            type: String,
-            enum: ['success', 'warning', 'danger']
-        },
-        message: String,
-        breakdown: {
-            website: {
-                score: Number,
-                status: String,
-                message: String,
-                recommendation: String
-            },
-            phone: {
-                score: Number,
-                status: String,
-                message: String,
-                recommendation: String
-            },
-            rating: {
-                score: Number,
-                status: String,
-                message: String,
-                recommendation: String
-            },
-            reviews: {
-                score: Number,
-                status: String,
-                message: String,
-                recommendation: String
-            },
-            photos: {
-                score: Number,
-                status: String,
-                message: String,
-                recommendation: String
-            }
-        }
-    },
+    // Health Score Results
+    // Phase 4: Replaced strict schema with Mixed.
+    // The previous strict schema caused Mongoose to strip new keys like 'google', 'social', and 'totalRevenueLeakage' on cached saves.
+    healthScore: mongoose.Schema.Types.Mixed,
 
     // Request Metadata
     ipAddress: String,
@@ -127,8 +68,12 @@ auditSchema.virtual('cacheKey').get(function () {
 });
 
 // Static method to find recent audits
-auditSchema.statics.findRecent = function (limit = 10) {
-    return this.find({ status: 'completed' })
+auditSchema.statics.findRecent = function (limit = 10, mode = null) {
+    const query = { status: 'completed' };
+    if (mode) {
+        query['healthScore.mode'] = mode;
+    }
+    return this.find(query)
         .sort({ createdAt: -1 }).limit(limit)
         .select('-__v');
 };

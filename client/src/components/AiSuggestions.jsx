@@ -13,19 +13,14 @@ const AiSuggestions = ({ businessData }) => {
             if (!businessData) return;
 
             try {
-                // Determine JustDial status for prompt
-                const justDialStatus = businessData.breakdown?.justdial?.score > 0 ? "Present" : "Missing";
-                const websiteStatus = businessData.breakdown?.website?.score > 0 ? "Present" : "Missing";
-
-                const response = await axios.post('/api/suggestions', {
+                const payload = {
                     businessName: businessData.businessName,
-                    area: businessData.area,
-                    googleRating: businessData.breakdown?.google?.details?.rating || "N/A",
-                    reviewCount: businessData.breakdown?.google?.details?.reviews || 0,
-                    websiteStatus,
-                    justDialStatus,
-                    totalScore: businessData.totalScore
-                });
+                    totalScore: businessData.totalScore,
+                    brandClass: businessData.brandClass || 'Emerging Brand',
+                    brandIntelligence: businessData.brandIntelligence || {},
+                    performanceBreakdown: businessData.breakdown || {}
+                };
+                const response = await axios.post('/api/suggestions', payload);
 
                 if (response.data.success) {
                     setSuggestions(response.data.suggestions);
@@ -65,6 +60,32 @@ const AiSuggestions = ({ businessData }) => {
         }
     };
 
+    const score = businessData?.totalScore || 0;
+    const getThemeConfig = () => {
+        if (score >= 70) return {
+            container: 'bg-gradient-to-br from-green-50/90 via-white/90 to-emerald-50/90 border-green-200',
+            glow: 'bg-green-400',
+            headerIcon: 'bg-green-600',
+            text: 'text-green-950',
+            subText: 'text-green-700/80'
+        };
+        if (score >= 40) return {
+            container: 'bg-gradient-to-br from-amber-50/90 via-white/90 to-orange-50/90 border-amber-200',
+            glow: 'bg-amber-400',
+            headerIcon: 'bg-amber-600',
+            text: 'text-amber-950',
+            subText: 'text-amber-700/80'
+        };
+        return {
+            container: 'bg-gradient-to-br from-red-50/90 via-white/90 to-rose-50/90 border-red-200',
+            glow: 'bg-red-400',
+            headerIcon: 'bg-red-600',
+            text: 'text-red-950',
+            subText: 'text-red-700/80'
+        };
+    };
+    const theme = getThemeConfig();
+
     if (loading) {
         return (
             <div className="w-full max-w-4xl mx-auto mt-8 p-6 bg-white rounded-xl shadow-lg border border-blue-100">
@@ -90,20 +111,27 @@ const AiSuggestions = ({ businessData }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="w-full max-w-4xl mx-auto mt-8 relative overflow-hidden"
+            className="w-full max-w-4xl mx-auto mt-8 relative"
         >
-            {/* Background Decorative Elements */}
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-red-50 to-orange-50 rounded-full blur-3xl -z-10 opacity-60" />
+            <div className={`backdrop-blur-sm rounded-2xl shadow-xl border overflow-hidden transition-colors duration-1000 ${theme.container}`}>
+                {/* Background Decorative Elements */}
+                <motion.div
+                    className={`absolute -top-32 -right-32 w-96 h-96 rounded-full blur-3xl opacity-20 pointer-events-none ${theme.glow}`}
+                    animate={{
+                        scale: [1, 1.2, 1],
+                        opacity: [0.15, 0.3, 0.15],
+                    }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                />
 
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-                <div className="p-6 md:p-8">
+                <div className="p-6 md:p-8 relative z-10">
                     <div className="flex items-center gap-3 mb-8">
-                        <div className="p-3 bg-gray-900 rounded-xl shadow-lg">
+                        <div className={`p-3 rounded-xl shadow-lg transition-colors duration-1000 ${theme.headerIcon}`}>
                             <ShieldAlert className="w-6 h-6 text-white" />
                         </div>
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900">Critical Growth Targets</h2>
-                            <p className="text-gray-500 text-sm">Priority actions for {businessData.businessName}</p>
+                            <h2 className={`text-2xl font-bold transition-colors duration-1000 ${theme.text}`}>Critical Growth Targets</h2>
+                            <p className={`text-sm transition-colors duration-1000 ${theme.subText}`}>Priority actions for {businessData.businessName}</p>
                         </div>
                     </div>
 

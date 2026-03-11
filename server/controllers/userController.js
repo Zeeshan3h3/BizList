@@ -8,9 +8,7 @@ exports.syncUser = async (req, res) => {
     try {
         const { clerkId, email, username, firstName, lastName } = req.body;
 
-        if (!clerkId || !email) {
-            return res.status(400).json({ success: false, message: 'Missing required fields' });
-        }
+        
 
         // Upsert user (Update if exists, Insert if new)
         const user = await User.findOneAndUpdate(
@@ -44,9 +42,7 @@ exports.updateUserProfile = async (req, res) => {
     try {
         const { clerkId, businessName, businessPhoto } = req.body;
 
-        if (!clerkId) {
-            return res.status(400).json({ success: false, message: 'Missing Clerk ID' });
-        }
+       
 
         const user = await User.findOneAndUpdate(
             { clerkId },

@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar from './Navbar';
+import Header from './Header';
 import Footer from './Footer';
 
 /**
@@ -9,7 +9,7 @@ import Footer from './Footer';
 const Layout = ({ children }) => {
     return (
         <div className="min-h-screen flex flex-col bg-slate-50">
-            <Navbar />
+            <Header />
 
             {/* Main Content - Add padding-top to account for fixed navbar */}
             <main className="flex-1 pt-20">
