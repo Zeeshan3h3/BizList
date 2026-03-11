@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import BusinessCard from './BusinessCard';
+import { API_BASE_URL } from '../services/api';
 import Button from './ui/Button';
 import Input from './ui/Input';
 
@@ -37,7 +38,7 @@ export default function BusinessSearchSelector({ onAuditStart }) {
         setSelectedBusiness(null);
 
         try {
-            const response = await fetch('/api/search-businesses', {
+            const response = await fetch(`${API_BASE_URL}/search-businesses`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

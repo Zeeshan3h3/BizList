@@ -4,6 +4,7 @@ import { CheckCircle, ShieldCheck } from 'lucide-react';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import { API_BASE_URL } from '../services/api';
 import PageWrapper from '../components/layout/PageWrapper';
 import BusinessSearchSelector from '../components/BusinessSearchSelector';
 import HeroSection from '../components/home/HeroSection';
@@ -23,7 +24,7 @@ const HomePage = () => {
     useEffect(() => {
         const fetchRecentAudits = async () => {
             try {
-                const response = await axios.get('/api/audits/recent?mode=business', { timeout: 3000 });
+                const response = await axios.get(`${API_BASE_URL}/audits/recent?mode=business`, { timeout: 3000 });
                 if (response.data && response.data.audits && response.data.audits.length > 0) {
                     setRecentAudits(response.data.audits.slice(0, 3));
                 }

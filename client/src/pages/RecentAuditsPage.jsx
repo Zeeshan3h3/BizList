@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, Clock, ArrowRight } from 'lucide-react';
 import axios from 'axios';
+import { API_BASE_URL } from '../services/api';
 import PageWrapper from '../components/layout/PageWrapper';
 
 const RecentAuditsPage = () => {
@@ -22,7 +23,7 @@ const RecentAuditsPage = () => {
 
     const fetchAudits = async () => {
         try {
-            const response = await axios.get('/api/audits/recent', {
+            const response = await axios.get(`${API_BASE_URL}/audits/recent`, {
                 params: {
                     limit: 50,
                     mode: isProMode ? 'pro' : 'business'
