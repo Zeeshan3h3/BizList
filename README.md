@@ -1,286 +1,143 @@
-# 🚀 Is My Business Online? - Lead Generation Tool
+# BizList - AI-Powered Business Audit & Lead Generation Tool
 
-A powerful lead magnet tool that analyzes local businesses' online presence and generates a **Digital Health Score** to convert prospects into agency clients.
+> An intelligent, full-stack application that analyzes local businesses' digital footprint, calculates growth potential, and generates actionable leads for digital agencies.
 
-![Lead Gen Tool](https://img.shields.io/badge/Status-Ready-green)
-![Node.js](https://img.shields.io/badge/Node.js-18+-blue)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+![BizList Banner](client/public/banner.png) *(Note: Please add a banner image to `client/public/banner.png`)*
 
-## 🎯 What Does This Do?
+## 🚀 Overview
 
-Shop owners enter their business name and location. The tool:
-1. ✅ Scrapes **Google Maps**, **JustDial**, and **Facebook**
-2. 📊 Generates a 0-100 **Digital Health Score**
-3. 📋 Shows specific gaps (missing website, no reviews, incorrect hours, etc.)
-4. 💰 Presents clear upsell: **"We can fix this for ₹5,000"**
+BizList is a powerful MERN stack application designed for digital marketing agencies. It automates the process of evaluating a local business's online presence. By simply entering a business name and location, BizList performs a comprehensive scrape of Google Maps and the business's website to generate a detailed "Digital Health Score". 
 
-**Result:** Warm leads who understand they need your agency's help!
+This score reveals critical gaps in their online strategy (missing hours, low review margins, poor website SEO) and instantly positions the agency as a data-driven solution provider.
 
----
+### Core Features
 
-## 📸 Preview
-
-The tool features:
-- 🎨 **Premium glassmorphism UI** with dark mode
-- 🌈 **Vibrant gradients** and smooth animations
-- 📱 **Fully responsive** mobile design
-- ⚡ **Real-time analysis** with loading animations
-- 🎯 **Conversion-optimized** CTA and booking flow
+- 🤖 **AI-Powered Analysis**: Utilizes Google Gemini to provide intelligent suggestions, categorize businesses, and explain score metrics.
+- 🗺️ **Deep Google Maps Integration**: Scrapes real-time data including ratings, review counts, claim status, and owner response rates using automated browser instances (Puppeteer).
+- 📊 **Dynamic Scoring Engine**: Calculates specialized scores across four vectors: `Search Readiness`, `Local Execution`, `Brand Authority`, and `Website Experience`.
+- 💰 **Revenue Architecture**: Predicts "Missed Revenue" and calculates an agency-specific "Opportunity Score" based on local area pressures and competition.
+- 📱 **Modern, Responsive UI**: Built with React, Vite, and Tailwind CSS, featuring smooth Framer Motion animations and dark-mode premium aesthetics.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Technology Stack
 
-**Frontend:**
-- Pure HTML, CSS, JavaScript (no framework needed!)
-- Google Fonts: Inter + Outfit
-- Glassmorphism effects
-- Smooth animations
+### Frontend (Client)
+- **Framework**: React 19 + Vite
+- **Styling**: Tailwind CSS v4, Lucide React (Icons)
+- **Animations**: Framer Motion
+- **Routing**: React Router v7
+- **Authentication**: Clerk (Prepared for future extension)
 
-**Backend:**
-- Node.js + Express
-- Google Places API
-- Web scraping (Axios + Cheerio)
-- Rate limiting (10 requests/hour per IP)
+### Backend (Server)
+- **Runtime**: Node.js + Express
+- **Database**: MongoDB + Mongoose
+- **Scraping**: Puppeteer (Headless Chrome), Cheerio
+- **AI Integration**: Google Generative AI (Gemini)
+- **Task Management**: P-Queue (concurrency control)
+- **Security**: Helmet, Express Rate Limit, CORS
 
 ---
 
-## 📦 Installation & Setup
+## 🗂️ Project Structure
 
-### Step 1: Install Dependencies
+This project is a Monorepo containing both the frontend and backend.
 
-```bash
-cd server
-npm install
+```
+lead-gen-tool/
+├── client/                     # Vite + React Frontend
+│   ├── src/
+│   │   ├── components/         # Reusable UI elements (ScoreCard, ResultsSection, etc.)
+│   │   ├── pages/              # Route pages (HomePage, Dashboard, Onboarding, etc.)
+│   │   └── services/           # API communication logic
+|   ├── .env                    # Client environment variables
+│   └── package.json    
+|
+├── server/                     # Node.js + Express Backend
+│   ├── config/                 # Database configuration
+│   ├── controllers/            # Route logic (audit, search, suggestions)
+│   ├── intelligence/           # Advanced logic (Competitor Gaps, Visibility Radar)
+│   ├── models/                 # Mongoose schema definitions
+│   ├── prediction/             # Growth potential calculations
+│   ├── scrapers/               # Fallback API scrapers
+│   ├── utils/                  # Core logic: Puppeteer Scraper, Score Calculators
+|   ├── .env                    # Server environment variables
+│   └── server.js               # Entry point
+|
+└── package.json                # Root package manager (concurrent scripts)
 ```
 
-### Step 2: Get Google Places API Key
+---
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project (or use existing)
-3. Enable **Places API**
-4. Go to **Credentials** → Create **API Key**
-5. Copy your API key
+## 💻 Local Development Setup
 
-### Step 3: Configure Environment
+### 1. Prerequisites
+- Node.js (v18 or higher recommended)
+- MongoDB Database (Local or MongoDB Atlas)
+- Google Gemini API Key
+- Google Places API Key (Optional fallback)
+
+### 2. Installation
+
+Clone the repository and install dependencies from the root directory:
 
 ```bash
-# In the server directory
-cp .env.example .env
+git clone https://github.com/Zeeshan3h3/BizList.git
+cd BizList
+npm run install-all
 ```
 
-Edit `.env` and add your API key:
-```env
-GOOGLE_PLACES_API_KEY=YOUR_ACTUAL_API_KEY_HERE
+### 3. Environment Variables
+You need to set up two environment files based on the provided `.env.example`.
+
+**`server/.env`**:
+```ini
 PORT=3000
 NODE_ENV=development
+MONGODB_URI=mongodb://localhost:27017/bizcheck
+GEMINI_API_KEY=your_gemini_key
+GOOGLE_PLACES_API_KEY=your_places_key
+DEBUG_SCRAPER=false
 ```
 
-### Step 4: Start the Backend
+**`client/.env`**:
+```ini
+VITE_API_URL=http://localhost:3000
+```
+
+### 4. Running the App
+
+You can start both the client and the server concurrently from the root directory:
 
 ```bash
-# Development mode with auto-reload
-npm run dev
-
-# Or production mode
+npm run build 
 npm start
 ```
-
-You should see:
-```
-╔═══════════════════════════════════════════════════════╗
-║  Lead Gen Tool Backend Server                         ║
-║  Status: Running ✓                                    ║
-║  Port: 3000                                           ║
-║  Environment: development                             ║
-║  API Key: Configured ✓                                ║
-╚═══════════════════════════════════════════════════════╝
-```
-
-### Step 5: Open the Frontend
-
-Simply open `index.html` in your browser:
-
-```bash
-# From the project root directory
-cd ..
-start index.html   # Windows
-# or
-open index.html    # Mac
-```
+*(Alternatively, run `npm run dev` in the client directory and `nodemon server.js` in the server directory in separate terminals).*
 
 ---
 
-## 🎮 How to Use
+## ☁️ Deployment (Safe Mode)
 
-1. **Enter business details:**
-   - Business name (e.g., "Sharma Medical Store")
-   - Area/City (e.g., "Connaught Place, Delhi")
+The codebase is properly configured for production deployment using platforms like Vercel (Frontend) and Render/Railway (Backend). 
 
-2. **Click "Check My Digital Score"**
+For detailed, step-by-step logic on deploying a Puppeteer application, maintaining a Monorepo on GitHub, and handling Web Socket timeouts, please refer to the `deployment_guide.md` (if available in your artifact history) or follow these general principles:
 
-3. **Wait 5-10 seconds** for analysis
-
-4. **See the results:**
-   - Overall score (0-100)
-   - Detailed breakdown for each platform
-   - Specific issues highlighted
-
-5. **Conversion:** Click "Book a Free Consultation"
+1. **Frontend**: Deploy the `client/` directory to Vercel. Ensure `VITE_API_URL` points to your live backend.
+2. **Backend**: Deploy the `server/` directory to Render/Railway. 
+    - **CRITICAL**: Because Puppeteer needs Chromium, you must configure your hosting provider to provide Chromium natively and set the `PUPPETEER_EXECUTABLE_PATH` environment variable (e.g., `/usr/bin/google-chrome`).
 
 ---
 
-## 📊 Scoring Algorithm
+## 🔒 Security & Anti-Bot Architecture
 
-| Platform | Max Points | Criteria |
-|----------|------------|----------|
-| **Google Maps** | 40 | Listing exists, website link, business hours, photos (5+), reviews (10+), rating (>4.0) |
-| **JustDial** | 25 | Listing exists, complete contact info, customer reviews |
-| **Facebook** | 25 | Page exists, followers (100+), recent activity, verified badge |
-| **Website** | 10 | Website exists, mobile-friendly |
-| **TOTAL** | **100** | |
-
-### Score Interpretation:
-- **0-39:** 🔴 Urgent attention needed
-- **40-69:** 🟡 Room for improvement  
-- **70-100:** 🟢 Good (but not perfect)
+- **Puppeteer Evasion**: Implements realistic User-Agents, random delays/jitters, and Request Interception (blocking heavy fonts/CSS) to prevent Google Maps bans while maximizing speed.
+- **Queueing Engine**: Uses `p-queue` to handle concurrent audit requests globally, preventing server memory overflow.
+- **Middleware Safety**: Secured with `helmet` for HTTP headers, and strict rate-limiting endpoints to deter malicious usage.
 
 ---
 
-## 🔌 API Endpoints
+## 👤 Author
 
-### `POST /api/analyze-business`
+Developed by **Zeeshan (Jadavpur University)** for Digital Agency Operations.
 
-Analyze a business's online presence.
-
-**Request:**
-```json
-{
-  "businessName": "Sharma Medical Store",
-  "area": "Connaught Place, Delhi"
-}
-```
-
-**Response:**
-```json
-{
-  "totalScore": 42,
-  "google": {
-    "score": 15,
-    "maxScore": 40,
-    "details": [...]
-  },
-  "justdial": { ... },
-  "facebook": { ... },
-  "website": { ... },
-  "businessName": "Sharma Medical Store",
-  "area": "Connaught Place, Delhi",
-  "analyzedAt": "2026-02-05T17:00:00.000Z"
-}
-```
-
-### `POST /api/book-call`
-
-Submit a consultation booking.
-
-**Request:**
-```json
-{
-  "name": "John Doe",
-  "phone": "+91 98765 43210",
-  "email": "john@example.com",
-  "businessName": "Sharma Medical Store",
-  "area": "Connaught Place, Delhi"
-}
-```
-
----
-
-## 🚀 Deployment Options
-
-### Option 1: Simple Hosting (Frontend Only)
-- Upload `index.html`, `styles.css`, `app.js` to any static host
-- Use demo data mode (already implemented in JavaScript)
-- **Pros:** Free, instant
-- **Cons:** No real data
-
-### Option 2: Full Stack (Recommended)
-**Backend:** Deploy to Heroku, Railway, or Render
-**Frontend:** Netlify, Vercel, or GitHub Pages
-- Update API URL in `app.js` to your backend URL
-
-### Option 3: VPS (DigitalOcean, AWS, etc.)
-- Full control
-- Can run both frontend and backend on same server
-
----
-
-## 💡 Customization Ideas
-
-1. **Add more platforms:** Instagram, LinkedIn, Yelp
-2. **Tiered pricing:** Different packages based on score
-3. **Email reports:** Send PDF reports to customers
-4. **Lead magnets:** Offer free downloadable guides
-5. **A/B testing:** Test different pricing/CTAs
-6. **Analytics:** Track conversion rates
-
----
-
-## 🔐 Security Notes
-
-- ✅ Rate limiting enabled (10 requests/hour per IP)
-- ✅ Input validation on all endpoints
-- ✅ CORS configured
-- ⚠️ **Important:** Don't commit `.env` file to Git!
-- ⚠️ **Important:** Restrict your Google API key in production
-
----
-
-## 📈 Next Steps
-
-1. **Get your Google Places API key** (required for real data)
-2. **Test with real businesses** in your area
-3. **Customize the pricing** and offer details
-4. **Set up booking notifications** (email/SMS)
-5. **Add to your website** with a prominent CTA
-6. **Track conversions** and optimize
-
----
-
-## 🐛 Troubleshooting
-
-**Issue:** "API Key not configured"
-- **Fix:** Make sure `.env` file exists with valid `GOOGLE_PLACES_API_KEY`
-
-**Issue:** Frontend can't connect to backend
-- **Fix:** Check backend is running on port 3000
-- **Fix:** Update `API_URL` in `app.js` if using different port
-
-**Issue:** Getting 429 (Too Many Requests)
-- **Fix:** You've hit the rate limit. Wait 1 hour or increase limit in `server.js`
-
-**Issue:** No results found
-- **Fix:** Try more specific business name + area
-- **Fix:** Check Google Places API quota
-
----
-
-## 📝 License
-
-MIT License - feel free to use this for your agency!
-
----
-
-## 🎉 Pro Tips
-
-1. **Share on social media:** "Check if YOUR business is visible online!"
-2. **Add urgency:** "First 10 businesses get 50% off"
-3. **Follow up fast:** Call leads within 24 hours
-4. **Show before/after:** Create case studies
-5. **Upsell services:** SEO, social media management, PPC
-
----
-
-**Built with ❤️ for local service agencies**
-
-Need help? Have questions? Found a bug? Open an issue!
