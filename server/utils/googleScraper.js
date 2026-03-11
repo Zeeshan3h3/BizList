@@ -224,13 +224,16 @@ async function scrapeGoogleMaps(businessName, area, attempt = 1) {
             headless: SCRAPER_CONFIG.headless,
             executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
             args: [
-                '--no-sandbox',                    // Required for some server environments
-                '--disable-setuid-sandbox',        // Security setting for root users
-                '--disable-dev-shm-usage',         // Prevents crashes on low-memory systems
-                '--disable-accelerated-2d-canvas', // Reduces resource usage
-                '--disable-gpu',                   // Not needed for headless mode
-                '--window-size=1920,1080',         // Set window size
-                '--lang=en-US'                     // Force English language
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-accelerated-2d-canvas',
+                '--disable-gpu',
+                '--window-size=1920,1080',
+                '--lang=en-US',
+                '--single-process',
+                '--no-zygote',
+                '--disable-site-isolation-trials'
             ]
         });
 
@@ -1177,13 +1180,18 @@ async function searchMultipleBusinesses(businessName, area, limit = 5) {
         // STEP 1: Launch browser
         browser = await puppeteer.launch({
             headless: SCRAPER_CONFIG.headless,
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
                 '--disable-dev-shm-usage',
                 '--disable-accelerated-2d-canvas',
                 '--disable-gpu',
-                '--window-size=1920,1080'
+                '--window-size=1920,1080',
+                '--lang=en-US',
+                '--single-process',
+                '--no-zygote',
+                '--disable-site-isolation-trials'
             ]
         });
 
@@ -1452,13 +1460,18 @@ async function scrapeBusinessByUrl(placeUrl) {
 
         browser = await puppeteer.launch({
             headless: SCRAPER_CONFIG.headless,
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
                 '--disable-dev-shm-usage',
                 '--disable-accelerated-2d-canvas',
                 '--disable-gpu',
-                '--window-size=1920,1080'
+                '--window-size=1920,1080',
+                '--lang=en-US',
+                '--single-process',
+                '--no-zygote',
+                '--disable-site-isolation-trials'
             ]
         });
 
@@ -1592,13 +1605,18 @@ async function getAutocompletesuggestions(query, area = '') {
 
         browser = await puppeteer.launch({
             headless: SCRAPER_CONFIG.headless,
+            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
                 '--disable-dev-shm-usage',
                 '--disable-accelerated-2d-canvas',
                 '--disable-gpu',
-                '--window-size=1920,1080'
+                '--window-size=1920,1080',
+                '--lang=en-US',
+                '--single-process',
+                '--no-zygote',
+                '--disable-site-isolation-trials'
             ]
         });
 

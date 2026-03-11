@@ -11,15 +11,11 @@ const syncUserSchema = Joi.object({
 
 //POST /api/users/profile
 
-const updateProfileSchema = Joi.object(
-    {
-        clearId: Joi.string().required(),
-        buissnessName: Joi.string().max(200).optional(),
-        businessPhoto: Joi.string().uri().optional(),
-
-
-    }
-);
+const updateProfileSchema = Joi.object({
+    clerkId: Joi.string().required(),
+    businessName: Joi.string().max(200).optional(),
+    businessPhoto: Joi.string().optional(),
+});
 
 const searchBusinessesSchema = Joi.object({
     businessName: Joi.string().min(2).max(200).required(),
