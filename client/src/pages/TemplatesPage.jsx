@@ -3,9 +3,12 @@ import PageWrapper from '../components/layout/PageWrapper';
 import TemplateCard from '../components/templates/TemplateCard';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
-import doctorImage from '../assets/Doctor_template.png'
-import CoachingImage from '../assets/CoachingT.png'
-
+import doctorImage from '../assets/Doctor_template.png';
+import CoachingImage from '../assets/CoachingT.png';
+import lawyerImage from '../assets/Screenshot 2026-03-16 011803.png';
+import portfolioImage from '../assets/Screenshot 2026-03-16 011827.png';
+import artisanImage from '../assets/Screenshot 2026-03-16 011720.png';
+import packrightImage from '../assets/Screenshot 2026-03-16 011704.png';
 
 const TEMPLATES_TEXT = {
     title: "Website Templates for Local Businesses",
@@ -15,14 +18,92 @@ const TEMPLATES_TEXT = {
             name: "Doctor Appointment Website",
             code: "MED-01",
             category: "Healthcare",
-            description: "A professional design focused on patient trust. Includes built-in appointment booking and review showcasing , About section for Doctors.",
-            demoUrl: "https://precious-llama-4bb4e2.netlify.app/",
+            description: "A professional design focused on patient trust. Includes built-in appointment booking, review showcasing, and an About section for Doctors.",
+            demoUrl: "https://docdemo-chi.vercel.app/",
             image: doctorImage,
             features: [
                 "Online Appointment Booking",
                 "Patient Review Integration",
                 "Service & Treatment Pages",
-                "HIPAA Compliant Contact Forms"
+                "WhatsApp & Call Quick Actions"
+            ]
+        },
+        {
+            name: "Legal Advocate Website",
+            code: "LAW-01",
+            category: "Legal",
+            description: "A premium, trust-inspiring website for lawyers and legal advocates. Showcases expertise, case results, and makes consultation booking seamless.",
+            demoUrl: "https://advdemo.vercel.app/",
+            image: lawyerImage,
+            features: [
+                "Practice Areas Showcase",
+                "Notable Case Results Section",
+                "Consultation Booking Form",
+                "Client Testimonials & Reviews",
+                "Legal Blog / Articles Section",
+                "WhatsApp Chat Integration"
+            ]
+        },
+        {
+            name: "Developer Portfolio Website",
+            code: "PORT-01",
+            category: "Portfolio",
+            description: "A futuristic, dark-themed portfolio for developers, engineers, and tech professionals. Highlights skills, projects, and contact in a visually stunning layout.",
+            demoUrl: "https://portfolio-client-beta-beryl.vercel.app/",
+            image: portfolioImage,
+            features: [
+                "Animated Hero with Role Typewriter",
+                "Skills & Expertise Showcase",
+                "Projects Grid with Live Links",
+                "Education & Certifications",
+                "Interactive Contact Section",
+                "Dark Mode Cyberpunk Aesthetic"
+            ]
+        },
+        {
+            name: "Artisan & Homemade Store",
+            code: "ART-01",
+            category: "Artisan / E-Commerce",
+            description: "An elegant, warm-toned website for handmade product sellers, craft stores, and artisan businesses. Built to drive sales and tell your brand story.",
+            demoUrl: "https://homemadedemo-1fy42zb7i-zeeshan3h3s-projects.vercel.app/",
+            image: artisanImage,
+            features: [
+                "Product Collection Showcase",
+                "Brand Story / Our Story Page",
+                "High-quality Gallery Section",
+                "WhatsApp Order Integration",
+                "Sustainability / Values Section",
+                "Instagram-style Visual Aesthetic"
+            ]
+        },
+        {
+            name: "Coaching Institute Website",
+            code: "EDU-01",
+            category: "Education",
+            description: "Highlight course details, student success stories, and make enrollment easy for prospective students.",
+            demoUrl: "https://demowebsite-kohl.vercel.app/",
+            image: CoachingImage,
+            features: [
+                "Course & Batch Listings",
+                "Student Results & Toppers",
+                "Fee Payment Integration",
+                "Testimonials & Star Ratings"
+            ]
+        },
+        {
+            name: "Packaging & B2B Store",
+            code: "PACK-01",
+            category: "E-Commerce / B2B",
+            description: "A bold, conversion-optimised storefront for packaging suppliers, wholesalers, and B2B product businesses. Built to drive bulk enquiries and repeat orders.",
+            demoUrl: "#",
+            image: packrightImage,
+            features: [
+                "Product Category Navigation",
+                "Custom Quote Request Form",
+                "Bulk Order Enquiry System",
+                "Trust Badges & Statistics Bar",
+                "Search Bar with Filters",
+                "Mobile-Optimised Catalog"
             ]
         },
         {
@@ -40,20 +121,6 @@ const TEMPLATES_TEXT = {
             ]
         },
         {
-            name: "Coaching Institute Website",
-            code: "EDU-01",
-            category: "Education",
-            description: "Highlight course details, student success stories, and make enrollment easy for prospective students.",
-            demoUrl: "https://comfy-torte-50f9b4.netlify.app/",
-            image: CoachingImage,
-            features: [
-                "Course & Batch Listings",
-                "Student Portal Area",
-                "Fee Payment Integration",
-                "Testimonials Section"
-            ]
-        },
-        {
             name: "Salon Booking Website",
             code: "SPA-01",
             category: "Beauty & Spa",
@@ -67,20 +134,6 @@ const TEMPLATES_TEXT = {
                 "Automated SMS Reminders"
             ]
         },
-        {
-            name: "Real Estate Listing Website",
-            code: "REAL-01",
-            category: "Real Estate",
-            description: "Feature your top properties with high-resolution image galleries and lead-capture contact forms.",
-            demoUrl: "https://precious-llama-4bb4e2.netlify.app/",
-            image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=2573&auto=format&fit=crop",
-            features: [
-                "Property Detail Pages",
-                "Advanced Search Filters",
-                "Agent Contact Forms",
-                "Neighborhood Guides"
-            ]
-        }
     ]
 };
 

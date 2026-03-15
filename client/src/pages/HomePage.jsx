@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle, ShieldCheck } from 'lucide-react';
-// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { API_BASE_URL } from '../services/api';
@@ -11,6 +10,8 @@ import HeroSection from '../components/home/HeroSection';
 import AgencyIntro from '../components/home/AgencyIntro';
 import ProblemSection from '../components/home/ProblemSection';
 import PricingSection from '../components/ui/PricingSection';
+
+import FloatingTemplates from '../components/home/FloatingTemplates';
 
 /**
  * HomePage - Agency Pivot
@@ -52,77 +53,24 @@ const HomePage = () => {
     return (
         <PageWrapper>
             {/* Hero Section */}
-            <section className="relative min-h-[85vh] flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-white via-indigo-50/50 to-purple-50 pt-16 lg:pt-24 pb-20 lg:pb-24">
+            <section className="relative min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-white via-indigo-50/30 to-white pt-20 pb-10 overflow-x-clip">
                 {/* Background Modern Glows */}
-                <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-blue-400/20 rounded-full blur-[100px] opacity-70 animate-pulse mix-blend-multiply pointer-events-none"></div>
-                <div className="absolute bottom-10 right-1/4 w-[600px] h-[600px] bg-purple-400/20 rounded-full blur-[120px] opacity-60 mix-blend-multiply pointer-events-none" style={{ animationDelay: '2s' }}></div>
+                <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-indigo-300/10 rounded-full blur-[120px] opacity-70 animate-pulse mix-blend-multiply pointer-events-none"></div>
+                <div className="absolute top-1/2 right-0 w-[600px] h-[600px] bg-blue-400/10 rounded-full blur-[100px] opacity-60 mix-blend-multiply pointer-events-none" style={{ animationDelay: '2s' }}></div>
 
                 {/* Content */}
-                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full mt-4 lg:mt-8">
-                    <div className="grid lg:grid-cols-2 gap-16 lg:gap-12 items-center">
+                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                    <div className="grid grid-cols-1 md:grid-cols-[1fr,1.1fr] gap-4 items-center">
                         <HeroSection />
 
-                        {/* RIGHT COLUMN — Run Audit CTA Visual */}
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.8, delay: 0.5 }}
-                            className="flex flex-col items-center justify-center gap-8 mt-12 lg:mt-0"
-                        >
-                            {/* Main glowing card */}
-                            <div className="relative w-full max-w-sm mx-auto">
-                                {/* Glow ring */}
-                                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 blur-2xl opacity-20 scale-105"></div>
-                                <div className="relative bg-white/90 backdrop-blur-xl rounded-3xl p-10 shadow-[0_20px_60px_-12px_rgba(99,102,241,0.25)] border border-indigo-100 flex flex-col items-center gap-6 text-center">
-                                    {/* Pulse indicator */}
-                                    <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs font-bold px-4 py-1.5 rounded-full">
-                                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                        Free Instant Audit
-                                    </div>
-
-                                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                        </svg>
-                                    </div>
-
-                                    <div>
-                                        <p className="text-2xl font-black text-slate-800 mb-1">Score Your Business</p>
-                                        <p className="text-slate-500 text-sm">Google • Website • AI Readiness</p>
-                                    </div>
-
-                                    {/* RUN AUDIT button */}
-                                    <button
-                                        onClick={() => {
-                                            document.getElementById('audit-tool')?.scrollIntoView({ behavior: 'smooth' });
-                                            setTimeout(() => {
-                                                const input = document.querySelector('input[placeholder*="Search"]');
-                                                if (input) input.focus();
-                                            }, 600);
-                                        }}
-                                        className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white px-8 py-4 rounded-2xl font-black text-lg shadow-[0_8px_30px_rgba(99,102,241,0.4)] hover:shadow-[0_8px_40px_rgba(99,102,241,0.6)] hover:-translate-y-1 transition-all flex items-center justify-center gap-3"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                        </svg>
-                                        RUN AUDIT — It's Free
-                                    </button>
-
-                                    {/* Trust micro-badges */}
-                                    <div className="flex flex-wrap items-center justify-center gap-3 pt-2 border-t border-slate-100 w-full">
-                                        {['No signup needed', 'Results in 30s', '100% Free'].map(label => (
-                                            <span key={label} className="flex items-center gap-1 text-[11px] font-semibold text-slate-500">
-                                                <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-                                                {label}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        </motion.div>
+                        {/* RIGHT COLUMN — Template Universe */}
+                        <div className="w-full relative min-h-[550px] md:min-h-[620px] overflow-visible">
+                            <FloatingTemplates />
+                        </div>
                     </div>
                 </div>
             </section>
+
 
             {/* ── AUDIT TOOL SECTION (moved below hero) ── */}
             <section id="audit-tool" className="relative bg-gradient-to-b from-purple-50 to-indigo-50 py-16 scroll-mt-20">

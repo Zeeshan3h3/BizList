@@ -1,7 +1,7 @@
 import React from 'react';
-// eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
-import { Store, Globe, MapPin, ArrowRight } from 'lucide-react';
+import { Store, Globe, MapPin, ArrowRight, Play, ExternalLink, Mail } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const HERO_TEXT = {
     headlineStart: "See Your Business",
@@ -14,24 +14,26 @@ const HERO_TEXT = {
 
 const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
+    visible: { opacity: 1, transition: { staggerChildren: 0.15 } }
 };
 
 const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } }
+    hidden: { opacity: 0, y: 25 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 0.46, 0.45, 0.94] } }
 };
 
 const HeroSection = () => {
+    const navigate = useNavigate();
+
     return (
         <motion.div
-            className="flex flex-col justify-center h-full pr-0 md:pr-8 text-left"
+            className="flex flex-col justify-center h-full pr-0 lg:pr-10 text-left relative z-20"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
         >
-            {/* Micro Illustrations / Breadcrumbs */}
-            <motion.div variants={itemVariants} className="flex items-center gap-1.5 text-slate-500 font-semibold text-[10px] sm:text-xs mb-4 bg-white/60 w-fit px-4 py-1.5 rounded-full border border-slate-200/60 shadow-sm backdrop-blur-md">
+            {/* Breadcrumb pill */}
+            <motion.div variants={itemVariants} className="flex items-center gap-1.5 text-slate-500 font-bold text-[10px] sm:text-xs mb-8 bg-white/60 w-fit px-4 py-1.5 rounded-full border border-slate-200/60 shadow-sm backdrop-blur-md">
                 <span className="flex items-center gap-1"><Store className="w-3.5 h-3.5 text-indigo-500" /> Local Business</span>
                 <ArrowRight className="w-2.5 h-2.5 text-slate-300" />
                 <span className="flex items-center gap-1"><Globe className="w-3.5 h-3.5 text-blue-500" /> Website</span>
@@ -39,44 +41,74 @@ const HeroSection = () => {
                 <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-emerald-500" /> Google Rank</span>
             </motion.div>
 
+            {/* Headline */}
             <motion.h1
                 variants={itemVariants}
-                className="text-4xl md:text-5xl lg:text-6xl font-heading font-black text-slate-800 tracking-tight mb-4 leading-[1.05]"
+                className="text-5xl md:text-6xl lg:text-7xl font-heading font-black text-slate-900 tracking-tight mb-6 leading-[1.05]"
             >
                 {HERO_TEXT.headlineStart} <br />
-                <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent pb-1">
+                <span className="bg-gradient-to-r from-indigo-600 via-blue-600 to-violet-600 bg-clip-text text-transparent pb-2 block">
                     {HERO_TEXT.headlineHighlight}
-                </span> {HERO_TEXT.headlineEnd}
+                </span>
+                <span className="relative">
+                    {HERO_TEXT.headlineEnd}
+                    <div className="absolute -bottom-2 left-0 w-24 h-1.5 bg-indigo-600/10 rounded-full"></div>
+                </span>
             </motion.h1>
 
+            {/* Subheadline */}
             <motion.p
                 variants={itemVariants}
-                className="text-lg md:text-xl text-slate-600 mb-3 font-medium leading-relaxed"
+                className="text-xl md:text-2xl text-slate-600 mb-4 font-semibold leading-relaxed max-w-xl"
             >
                 {HERO_TEXT.subheadline}
             </motion.p>
 
+            {/* Support line */}
             <motion.p
                 variants={itemVariants}
-                className="text-base text-slate-500 mb-6"
+                className="text-lg text-slate-500 mb-10 font-medium"
             >
                 {HERO_TEXT.supportLine}
             </motion.p>
 
-            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            {/* ── CTA Button Group ── */}
+            <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
+                {/* Primary — Run Audit */}
                 <button
                     onClick={() => {
-                        document.getElementById('check-score')?.scrollIntoView({ behavior: 'smooth' });
+                        document.getElementById('audit-tool')?.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="bg-indigo-600 hover:bg-indigo-500 text-white px-8 py-4 rounded-full font-bold shadow-[0_0_20px_rgba(79,70,229,0.3)] hover:shadow-[0_0_30px_rgba(79,70,229,0.5)] hover:-translate-y-1 transition-all text-lg flex items-center gap-3"
+                    className="group relative bg-gradient-to-r from-indigo-600 via-blue-600 to-violet-600 hover:from-indigo-500 hover:via-blue-500 hover:to-violet-500 text-white px-10 py-[18px] rounded-2xl font-black shadow-[0_8px_30px_-6px_rgba(79,70,229,0.45)] hover:shadow-[0_12px_45px_-6px_rgba(79,70,229,0.6)] hover:-translate-y-0.5 hover:scale-[1.03] transition-all duration-250 text-lg flex items-center justify-center gap-3"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
-                    {HERO_TEXT.button}
+                    <div className="absolute inset-0 bg-white/15 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-250"></div>
+                    <Play className="w-4.5 h-4.5 fill-current relative z-10" />
+                    <span className="relative z-10">{HERO_TEXT.button}</span>
+                </button>
+
+                {/* Secondary — See Templates (glass style) */}
+                <button
+                    onClick={() => navigate('/templates')}
+                    className="group relative overflow-hidden px-8 py-[18px] rounded-2xl font-bold text-slate-700 hover:text-indigo-600 transition-all duration-250 text-base flex items-center justify-center gap-2 border border-slate-200/80 bg-white/50 backdrop-blur-md shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.02] hover:border-indigo-200/60 hover:bg-indigo-50/40"
+                >
+                    {/* Subtle gradient border shimmer */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-100/0 via-indigo-100/30 to-blue-100/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+                    <ExternalLink className="w-4.5 h-4.5 relative z-10" />
+                    <span className="relative z-10">See Templates</span>
+                </button>
+
+                {/* Tertiary — Contact (ghost) */}
+                <button
+                    onClick={() => navigate('/contact')}
+                    className="px-6 py-[18px] rounded-2xl font-bold text-slate-500 hover:text-indigo-600 transition-all duration-250 text-base flex items-center justify-center gap-2 group hover:scale-[1.02]"
+                >
+                    <Mail className="w-4.5 h-4.5 group-hover:scale-110 transition-transform duration-250" />
+                    <span className="relative">
+                        Contact
+                        <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-gradient-to-r from-indigo-500 to-blue-500 group-hover:w-full transition-all duration-300 rounded-full"></span>
+                    </span>
                 </button>
             </motion.div>
-
         </motion.div>
     );
 };

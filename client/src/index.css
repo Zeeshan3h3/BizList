@@ -101,3 +101,170 @@
     background-position: 0% 50%;
   }
 }
+
+/* Parallax float variants — different speeds create depth illusion */
+@keyframes float-slow {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  33% {
+    transform: translateY(-14px) rotate(0.5deg);
+  }
+
+  66% {
+    transform: translateY(-8px) rotate(-0.3deg);
+  }
+}
+
+@keyframes float-mid {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  40% {
+    transform: translateY(-18px) rotate(0.8deg);
+  }
+
+  70% {
+    transform: translateY(-6px) rotate(-0.5deg);
+  }
+}
+
+@keyframes float-fast {
+
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform: translateY(-22px) rotate(1deg);
+  }
+}
+
+@keyframes drift {
+
+  0%,
+  100% {
+    transform: translateX(0) translateY(0);
+  }
+
+  30% {
+    transform: translateX(6px) translateY(-3px);
+  }
+
+  70% {
+    transform: translateX(-4px) translateY(2px);
+  }
+}
+
+@keyframes infinite-scroll {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.animate-float-mid {
+  animation: float-mid 5.5s ease-in-out infinite;
+}
+
+.animate-float-fast {
+  animation: float-fast 3.5s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+.animate-drift {
+  animation: drift 10s ease-in-out infinite;
+}
+
+.animate-infinite-scroll {
+  animation: infinite-scroll 25s linear infinite;
+}
+
+/* ── Template Universe — orbital & glow animations ── */
+@keyframes orbit-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes card-breathe {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.025);
+  }
+}
+
+@keyframes glow-pulse {
+
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes glow-drift {
+
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.2;
+  }
+
+  33% {
+    transform: translate(15px, -10px) scale(1.05);
+    opacity: 0.3;
+  }
+
+  66% {
+    transform: translate(-10px, 8px) scale(0.97);
+    opacity: 0.22;
+  }
+}
+
+.animate-orbit-rotate {
+  animation: orbit-rotate 35s linear infinite;
+}
+
+.animate-card-breathe {
+  animation: card-breathe 6s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 8s ease-in-out infinite;
+}
+
+.animate-glow-drift {
+  animation: glow-drift 12s ease-in-out infinite;
+}
