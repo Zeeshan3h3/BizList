@@ -221,19 +221,13 @@ async function scrapeGoogleMaps(businessName, area, attempt = 1) {
         // STEP 1: Launch browser
         // Puppeteer launches a Chrome instance we can control programmatically
         browser = await puppeteer.launch({
-            headless: SCRAPER_CONFIG.headless,
-            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
+           headless: "new", // This fixes your deprecation warning!
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--disable-accelerated-2d-canvas',
+                '--disable-dev-shm-usage', // Prevents memory crashes on Render
                 '--disable-gpu',
-                '--window-size=1920,1080',
-                '--lang=en-US',
-                '--single-process',
-                '--no-zygote',
-                '--disable-site-isolation-trials'
+                '--single-process' 
             ]
         });
 
