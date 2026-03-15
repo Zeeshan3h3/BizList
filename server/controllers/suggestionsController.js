@@ -1,5 +1,4 @@
 const axios = require('axios');
-require('dotenv').config();
 
 /**
  * Generate AI Business Suggestions
@@ -74,8 +73,8 @@ exports.getSuggestions = async (req, res) => {
         const errorData = error.response ? error.response.data : error.message;
         console.error("[AI SUGGESTIONS ERROR]:", JSON.stringify(errorData, null, 2));
 
-        // Provide a smart programmatic fallback if AI fails (to ensure UI never breaks due to quota limits)
-        if (process.env.NODE_ENV === 'development' || true) {
+        // Smart programmatic fallback — ensures UI never breaks even if Gemini is down or rate-limited
+        {   // Always use fallback when AI fails
             console.log("⚠️ Using smart data-driven fallback due to AI error");
 
             const fallbackSuggestions = [];
@@ -142,7 +141,5 @@ exports.getSuggestions = async (req, res) => {
                 suggestions: fallbackSuggestions
             });
         }
-
-        res.status(500).json({ success: false, error: "AI Error", details: errorData });
     }
 };

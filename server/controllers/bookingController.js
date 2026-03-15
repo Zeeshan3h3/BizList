@@ -28,7 +28,7 @@ async function createBooking(req, res) {
 
         await booking.save();
 
-        console.log(`[BOOKING] New lead: ${name} - ${phone} - ${businessName}`);
+        console.log(`[BOOKING] New lead received for: ${businessName}`);
 
         // TODO: Send email notification to your team
         // TODO: Send SMS confirmation to customer

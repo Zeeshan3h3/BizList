@@ -4,9 +4,7 @@ import { ClerkProvider } from '@clerk/clerk-react'
 import './index.css'
 import App from './App.jsx'
 
-console.log('App starting...');
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
-console.log('Publishable Key exists:', !!PUBLISHABLE_KEY);
 
 try {
   const rootElement = document.getElementById('root');

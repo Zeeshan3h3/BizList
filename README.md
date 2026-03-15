@@ -47,7 +47,7 @@ This project is a Monorepo containing both the frontend and backend.
 lead-gen-tool/
 ├── client/                     # Vite + React Frontend
 │   ├── src/
-│   │   ├── components/         # Reusable UI elements (ScoreCard, ResultsSection, etc.)
+│   │   ├── components/         # Reusable UI elements (ScoreCard, ResultsSection, etc.)![alt text](image.png)
 │   │   ├── pages/              # Route pages (HomePage, Dashboard, Onboarding, etc.)
 │   │   └── services/           # API communication logic
 |   ├── .env                    # Client environment variables
