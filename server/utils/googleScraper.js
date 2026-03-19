@@ -251,12 +251,11 @@ async function scrapeGoogleMaps(businessName, area, attempt = 1) {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8'
         });
 
-        // PHASE 4 OPTIMIZATION: Block heavy assets (Fonts, CSS, Media) BUT ALLOW IMAGES so we can extract real photos
+        // PHASE 4 OPTIMIZATION: Relaxed to prevent Maps from hanging
         await page.setRequestInterception(true);
         page.on('request', (request) => {
             const resourceType = request.resourceType();
-            // Block stylesheets, media, and fonts to speed up Map loads, but KEEP images for scraping
-            if (['stylesheet', 'media', 'font', 'other'].includes(resourceType)) {
+            if (['media', 'font'].includes(resourceType)) {
                 request.abort();
             } else {
                 request.continue();
@@ -281,7 +280,7 @@ async function scrapeGoogleMaps(businessName, area, attempt = 1) {
         // Try multiple selectors because Google changes their HTML frequently
         console.log('[SCRAPER] Waiting for search results or auto-open...');
         const combinedSelectors = [...SELECTORS.searchResults, ...SELECTORS.businessName];
-        const resultsSelector = await trySelectors(page, combinedSelectors, 10000);
+        const resultsSelector = await trySelectors(page, combinedSelectors, 5000);
 
         if (!resultsSelector) {
             console.log('[SCRAPER] No results or business found');
@@ -1203,10 +1202,10 @@ async function searchMultipleBusinesses(businessName, area, limit = 5) {
 
         console.log(`[SEARCH] Navigating to: ${googleMapsUrl}`);
 
-        // PHASE 4 OPTIMIZATION: Block heavy assets for speed
+        // PHASE 4 OPTIMIZATION: Relaxed to prevent Maps from hanging
         await page.setRequestInterception(true);
         page.on('request', (request) => {
-            if (['image', 'stylesheet', 'media', 'font', 'other'].includes(request.resourceType())) {
+            if (['media', 'font'].includes(request.resourceType())) {
                 request.abort();
             } else {
                 request.continue();
@@ -1222,14 +1221,14 @@ async function searchMultipleBusinesses(businessName, area, limit = 5) {
 
         // Explicity wait for the main h1 to appear, which means Maps has hydrated the React/Angular view
         try {
-            await page.waitForSelector('h1', { timeout: 15000 });
+            await page.waitForSelector('h1', { timeout: 5000 });
         } catch (e) {
-            console.log('[SEARCH] Warning: Main h1 didn\'t appear within 15s.');
+            console.log('[SEARCH] Warning: Main h1 didn\'t appear within 5s.');
         }
 
         // Check for either search results OR a direct business page
         const combinedSelectors = [...SELECTORS.searchResults, ...SELECTORS.businessName];
-        const resultsSelector = await trySelectors(page, combinedSelectors, 10000);
+        const resultsSelector = await trySelectors(page, combinedSelectors, 5000);
 
         if (!resultsSelector) {
             throw new Error('NO_RESULTS_FOUND');
@@ -1529,10 +1528,10 @@ async function scrapeBusinessByUrl(placeUrl) {
         await page.setUserAgent(SCRAPER_CONFIG.userAgent);
         await page.setViewport({ width: 1920, height: 1080 });
 
-        // PHASE 4 OPTIMIZATION: Block heavy assets for speed
+        // PHASE 4 OPTIMIZATION: Relaxed to prevent Maps from hanging
         await page.setRequestInterception(true);
         page.on('request', (request) => {
-            if (['image', 'stylesheet', 'media', 'font', 'other'].includes(request.resourceType())) {
+            if (['media', 'font'].includes(request.resourceType())) {
                 request.abort();
             } else {
                 request.continue();
@@ -1550,9 +1549,9 @@ async function scrapeBusinessByUrl(placeUrl) {
 
         // Explicity wait for the main h1 to appear, which means Maps has hydrated the React/Angular view
         try {
-            await page.waitForSelector('h1', { timeout: 15000 });
+            await page.waitForSelector('h1', { timeout: 5000 });
         } catch (e) {
-            console.log('[SCRAPER] Warning: Title h1 didn\'t appear within 15s.');
+            console.log('[SCRAPER] Warning: Title h1 didn\'t appear within 5s.');
         }
 
         await randomWait(1500, 500);
