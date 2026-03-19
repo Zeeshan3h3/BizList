@@ -25,7 +25,7 @@ const HomePage = () => {
     useEffect(() => {
         const fetchRecentAudits = async () => {
             try {
-                const response = await axios.get(`${API_BASE_URL}/audits/recent?mode=business`, { timeout: 3000 });
+                const response = await axios.get(`${API_BASE_URL}/audits/recent?mode=business`, { timeout: 60000 });
                 if (response.data && response.data.audits && response.data.audits.length > 0) {
                     setRecentAudits(response.data.audits.slice(0, 3));
                 }

@@ -28,7 +28,7 @@ const RecentAuditsPage = () => {
                     limit: 50,
                     mode: isProMode ? 'pro' : 'business'
                 },
-                timeout: 5000
+                timeout: 60000
             });
             if (response.data && response.data.audits) {
                 setAudits(response.data.audits);
