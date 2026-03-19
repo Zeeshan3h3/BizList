@@ -1227,10 +1227,65 @@ async function searchMultipleBusinesses(businessName, area, limit = 5) {
             console.log('[SEARCH] Warning: Main h1 didn\'t appear within 15s.');
         }
 
-        // Additional wait to let the list populate fullyrch results
-        const resultsSelector = await trySelectors(page, SELECTORS.searchResults, 10000);
+        // Check for either search results OR a direct business page
+        const combinedSelectors = [...SELECTORS.searchResults, ...SELECTORS.businessName];
+        const resultsSelector = await trySelectors(page, combinedSelectors, 10000);
+
         if (!resultsSelector) {
             throw new Error('NO_RESULTS_FOUND');
+        }
+
+        const isDirectProfile = SELECTORS.businessName.includes(resultsSelector);
+
+        if (isDirectProfile) {
+            console.log('[SEARCH] Google Maps auto-directed to a single business profile.');
+
+            const name = await page.evaluate(() => document.querySelector('h1')?.textContent?.trim() || 'Exact Match Business');
+            const placeUrl = page.url();
+            const placeIdMatch = placeUrl.match(/!1s([^!]+)/);
+            const placeId = placeIdMatch ? placeIdMatch[1] : `direct_${Date.now()}`;
+
+            const thumbnail = await page.evaluate(() => {
+                const img = document.querySelector('button[jsaction*="photo"] img, img[src*="googleusercontent"], img[src*="ggpht"]');
+                return img ? img.src : null;
+            });
+
+            const ratingInfo = await page.evaluate(() => {
+                let rating = null;
+                let reviewCount = 0;
+
+                const ratingElement = document.querySelector('div.F7nice span[aria-hidden="true"], span[role="img"][aria-label*="stars"]');
+                if (ratingElement) {
+                    const match = (ratingElement.textContent || ratingElement.getAttribute('aria-label') || '').match(/(\d+\.?\d*)/);
+                    if (match) rating = parseFloat(match[1]);
+                }
+
+                const reviewElement = document.querySelector('div.F7nice span[aria-label*="review"]');
+                if (reviewElement) {
+                    const aria = reviewElement.getAttribute('aria-label') || '';
+                    const revMatch = aria.match(/([\d,]+)/);
+                    if (revMatch) reviewCount = parseInt(revMatch[1].replace(/,/g, ''));
+                }
+
+                return { rating, reviewCount };
+            });
+
+            const results = [{
+                id: placeId,
+                name: name,
+                address: 'Auto-directed exact match',
+                rating: ratingInfo.rating,
+                reviewCount: ratingInfo.reviewCount,
+                thumbnail: thumbnail,
+                placeUrl: placeUrl
+            }];
+
+            await browser.close();
+            return {
+                success: true,
+                results: results,
+                query: searchQuery
+            };
         }
 
         console.log('[SEARCH] Search results loaded');
