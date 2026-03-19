@@ -279,7 +279,7 @@ async function scrapeGoogleMaps(businessName, area, attempt = 1) {
         // STEP 7: Wait for search results to load OR for the business page to auto-open
         // Try multiple selectors because Google changes their HTML frequently
         console.log('[SCRAPER] Waiting for search results or auto-open...');
-        const combinedSelectors = [...SELECTORS.searchResults, ...SELECTORS.businessName];
+        const combinedSelectors = [...SELECTORS.businessName, ...SELECTORS.searchResults];
         const resultsSelector = await trySelectors(page, combinedSelectors, 5000);
 
         if (!resultsSelector) {
@@ -1227,7 +1227,7 @@ async function searchMultipleBusinesses(businessName, area, limit = 5) {
         }
 
         // Check for either search results OR a direct business page
-        const combinedSelectors = [...SELECTORS.searchResults, ...SELECTORS.businessName];
+        const combinedSelectors = [...SELECTORS.businessName, ...SELECTORS.searchResults];
         const resultsSelector = await trySelectors(page, combinedSelectors, 5000);
 
         if (!resultsSelector) {
