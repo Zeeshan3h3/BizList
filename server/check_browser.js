@@ -1,8 +1,22 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
+const chromium = require('@sparticuz/chromium');
 
 (async () => {
     try {
-        const browser = await puppeteer.launch({ headless: "new" });
+        const browser = await puppeteer.launch({
+            args: [
+                ...chromium.args,
+                '--no-sandbox',
+                '--disable-setuid-sandbox',
+                '--disable-dev-shm-usage',
+                '--single-process'
+            ],
+            defaultViewport: chromium.defaultViewport,
+            executablePath: process.env.NODE_ENV === 'production' ? await chromium.executablePath() : undefined,
+            ...(process.env.NODE_ENV !== 'production' ? { channel: 'chrome' } : {}),
+            headless: chromium.headless,
+            ignoreHTTPSErrors: true,
+        });
         const page = await browser.newPage();
 
         page.on('console', msg => {

@@ -1,4 +1,5 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
+const chromium = require('@sparticuz/chromium');
 const path = require('path');
 const fs = require('fs');
 
@@ -221,14 +222,18 @@ async function scrapeGoogleMaps(businessName, area, attempt = 1) {
         // STEP 1: Launch browser
         // Puppeteer launches a Chrome instance we can control programmatically
         browser = await puppeteer.launch({
-           headless: "new", // This fixes your deprecation warning!
             args: [
+                ...chromium.args,
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage', // Prevents memory crashes on Render
-                '--disable-gpu',
-                '--single-process' 
-            ]
+                '--disable-dev-shm-usage',
+                '--single-process'
+            ],
+            defaultViewport: chromium.defaultViewport,
+            executablePath: process.env.NODE_ENV === 'production' ? await chromium.executablePath() : undefined,
+            ...(process.env.NODE_ENV !== 'production' ? { channel: 'chrome' } : {}),
+            headless: chromium.headless,
+            ignoreHTTPSErrors: true,
         });
 
         // STEP 2: Create new page (tab)
@@ -1173,20 +1178,18 @@ async function searchMultipleBusinesses(businessName, area, limit = 5) {
 
         // STEP 1: Launch browser
         browser = await puppeteer.launch({
-            headless: SCRAPER_CONFIG.headless,
-            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
             args: [
+                ...chromium.args,
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
                 '--disable-dev-shm-usage',
-                '--disable-accelerated-2d-canvas',
-                '--disable-gpu',
-                '--window-size=1920,1080',
-                '--lang=en-US',
-                '--single-process',
-                '--no-zygote',
-                '--disable-site-isolation-trials'
-            ]
+                '--single-process'
+            ],
+            defaultViewport: chromium.defaultViewport,
+            executablePath: process.env.NODE_ENV === 'production' ? await chromium.executablePath() : undefined,
+            ...(process.env.NODE_ENV !== 'production' ? { channel: 'chrome' } : {}),
+            headless: chromium.headless,
+            ignoreHTTPSErrors: true,
         });
 
         page = await browser.newPage();
@@ -1453,20 +1456,18 @@ async function scrapeBusinessByUrl(placeUrl) {
         console.log(`[SCRAPER] Scraping business by URL: ${placeUrl}`);
 
         browser = await puppeteer.launch({
-            headless: SCRAPER_CONFIG.headless,
-            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
             args: [
+                ...chromium.args,
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
                 '--disable-dev-shm-usage',
-                '--disable-accelerated-2d-canvas',
-                '--disable-gpu',
-                '--window-size=1920,1080',
-                '--lang=en-US',
-                '--single-process',
-                '--no-zygote',
-                '--disable-site-isolation-trials'
-            ]
+                '--single-process'
+            ],
+            defaultViewport: chromium.defaultViewport,
+            executablePath: process.env.NODE_ENV === 'production' ? await chromium.executablePath() : undefined,
+            ...(process.env.NODE_ENV !== 'production' ? { channel: 'chrome' } : {}),
+            headless: chromium.headless,
+            ignoreHTTPSErrors: true,
         });
 
         page = await browser.newPage();
@@ -1598,20 +1599,18 @@ async function getAutocompletesuggestions(query, area = '') {
         console.log(`[AUTOCOMPLETE] Getting suggestions for: "${query}" in "${area}"`);
 
         browser = await puppeteer.launch({
-            headless: SCRAPER_CONFIG.headless,
-            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
             args: [
+                ...chromium.args,
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
                 '--disable-dev-shm-usage',
-                '--disable-accelerated-2d-canvas',
-                '--disable-gpu',
-                '--window-size=1920,1080',
-                '--lang=en-US',
-                '--single-process',
-                '--no-zygote',
-                '--disable-site-isolation-trials'
-            ]
+                '--single-process'
+            ],
+            defaultViewport: chromium.defaultViewport,
+            executablePath: process.env.NODE_ENV === 'production' ? await chromium.executablePath() : undefined,
+            ...(process.env.NODE_ENV !== 'production' ? { channel: 'chrome' } : {}),
+            headless: chromium.headless,
+            ignoreHTTPSErrors: true,
         });
 
         page = await browser.newPage();

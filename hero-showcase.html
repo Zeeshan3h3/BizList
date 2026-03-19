@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Showcase Hero</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0A0A0F;
+            --text-main: #FFFFFF;
+            --text-muted: #8F9098;
+            --accent-glow: #4F46E5;
+            
+            --card-radius: 16px;
+            --card-border: rgba(255, 255, 255, 0.08);
+            --card-bg: rgba(25, 25, 30, 0.4);
+            
+            --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* Background Effects */
+        .bg-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60vw;
+            height: 60vw;
+            max-width: 800px;
+            max-height: 800px;
+            background: radial-gradient(circle, rgba(79, 70, 229, 0.15) 0%, transparent 60%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+            z-index: 0;
+            mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+            -webkit-mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+        }
+
+        /* Typography Overlay */
+        .hero-content {
+            position: relative;
+            z-index: 100;
+            text-align: center;
+            padding-top: 12vh;
+            pointer-events: none; /* Let clicks pass through to cards */
+        }
+
+        .eyebrow {
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-weight: 600;
+            display: block;
+        }
+
+        .headline {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(48px, 6vw, 64px);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        .subline {
+            font-size: 16px;
+            color: var(--text-muted);
+            max-width: 400px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        /* Cards Layout Container */
+        .showcase-container {
+            position: relative;
+            width: 100%;
+            height: 70vh;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            perspective: 1000px;
+            margin-top: -5vh;
+        }
+
+        /* Card Base Structure */
+        .mockup-card {
+            position: absolute;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--card-radius);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 
+                0 24px 48px -12px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            will-change: transform;
+            cursor: pointer;
+        }
+
+        .mockup-card:hover {
+            z-index: 50 !important;
+            filter: blur(0) brightness(1.1) !important;
+            box-shadow: 
+                0 32px 64px -12px rgba(0, 0, 0, 0.6),
+                0 0 32px rgba(79, 70, 229, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* Browser Chrome */
+        .browser-header {
+            height: 36px;
+            background: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .dot.red { background: #FF5F56; }
+        .dot.yellow { background: #FFBD2E; }
+        .dot.green { background: #27C93F; }
+
+        .url-bar {
+            margin-left: 12px;
+            height: 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            flex-grow: 1;
+            max-width: 60%;
+        }
+
+        /* Card Interiors (Faux UI) */
+        .card-body {
+            flex-grow: 1;
+            padding: 24px;
+            position: relative;
+            background: linear-gradient(135deg, var(--cx-1) 0%, var(--cx-2) 100%);
+        }
+
+        .faux-nav {
+            height: 12px;
+            width: 100%;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        .faux-link { width: 32px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; }
+
+        .faux-hero {
+            width: 70%;
+            height: 24px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+        .faux-hero.short { width: 40%; }
+        
+        .faux-text {
+            width: 80%;
+            height: 8px;
+            background: rgba(255,255,255,0.4);
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+
+        .faux-btn {
+            width: 96px;
+            height: 32px;
+            background: var(--text-main);
+            border-radius: 16px;
+            margin-top: 24px;
+            opacity: 0.9;
+        }
+
+        /* Individual Card Configurations */
+        .card-center {
+            width: 480px;
+            height: 320px;
+            z-index: 10;
+            --cx-1: rgba(79, 70, 229, 0.4);
+            --cx-2: rgba(0, 0, 0, 0.8);
+            /* Initial animation state handled by JS/CSS */
+        }
+
+        .card-tl {
+            width: 320px;
+            height: 220px;
+            z-index: 8;
+            --cx-1: rgba(16, 185, 129, 0.3);
+            --cx-2: rgba(0, 0, 0, 0.9);
+            filter: blur(2px) brightness(0.8);
+        }
+
+        .card-tr {
+            width: 280px;
+            height: 340px;
+            z-index: 9;
+            --cx-1: rgba(244, 63, 94, 0.3);
+            --cx-2: rgba(23, 23, 23, 0.9);
+            filter: blur(1.5px) brightness(0.85);
+        }
+
+        .card-bl {
+            width: 340px;
+            height: 240px;
+            z-index: 7;
+            --cx-1: rgba(245, 158, 11, 0.25);
+            --cx-2: rgba(10, 10, 10, 0.95);
+            filter: blur(3px) brightness(0.7);
+        }
+
+        .card-br {
+            width: 380px;
+            height: 260px;
+            z-index: 6;
+            --cx-1: rgba(56, 189, 248, 0.3);
+            --cx-2: rgba(15, 23, 42, 0.9);
+            filter: blur(2px) brightness(0.75);
+        }
+
+        /* Idle Animations */
+        @keyframes float1 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes float2 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes float3 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+        @keyframes float4 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+        @keyframes float5 { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-18px); } }
+
+        .float-1 .idle-wrapper { animation: float1 6s ease-in-out infinite; }
+        .float-2 .idle-wrapper { animation: float2 4.5s ease-in-out infinite 0.5s; }
+        .float-3 .idle-wrapper { animation: float3 7s ease-in-out infinite 1s; }
+        .float-4 .idle-wrapper { animation: float4 5s ease-in-out infinite 0.2s; }
+        .float-5 .idle-wrapper { animation: float5 6.5s ease-in-out infinite 0.8s; }
+
+        .idle-wrapper {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Initial Setup for JS Animation */
+        .mockup-card {
+            opacity: 0;
+        }
+
+        @media (max-width: 900px) {
+            .showcase-container {
+                flex-direction: column;
+                height: auto;
+                gap: 24px;
+                padding: 40px 20px;
+                margin-top: 0;
+            }
+            .mockup-card {
+                position: relative;
+                width: 100% !important;
+                max-width: 480px;
+                height: 280px !important;
+                filter: none !important;
+                opacity: 1 !important;
+                transform: none !important;
+                left: auto !important;
+                top: auto !important;
+                right: auto !important;
+                bottom: auto !important;
+                z-index: 1 !important;
+            }
+            .idle-wrapper {
+                animation: none !important;
+            }
+            .bg-glow {
+                width: 100vw;
+                height: 100vw;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+    <div class="bg-grid"></div>
+
+    <div class="hero-content">
+        <span class="eyebrow">PORTFOLIO</span>
+        <h1 class="headline">Crafted for the Bold.</h1>
+        <p class="subline">Showcasing digital experiences that push boundaries, drive growth, and define the next generation of the web.</p>
+    </div>
+
+    <div class="showcase-container" id="showcase">
+        <!-- Center Card -->
+        <div class="mockup-card card-center float-1" data-parallax="0.015" data-rotate="-2" data-z="0" data-x="0" data-y="0">
+            <div class="idle-wrapper">
+                <div class="browser-header">
+                    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                    <div class="url-bar"></div>
+                </div>
+                <div class="card-body">
+                    <div class="faux-nav"><div class="faux-link"></div><div class="faux-link"></div></div>
+                    <div class="faux-hero"></div>
+                    <div class="faux-hero short"></div>
+                    <div style="margin-top: 24px;"></div>
+                    <div class="faux-text"></div>
+                    <div class="faux-text" style="width: 60%"></div>
+                    <div class="faux-btn"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Left Card -->
+        <div class="mockup-card card-tl float-2" data-parallax="0.03" data-rotate="-6" data-z="-40" data-x="-350" data-y="-120">
+            <div class="idle-wrapper">
+                <div class="browser-header">
+                    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                </div>
+                <div class="card-body">
+                    <div class="faux-hero"></div>
+                    <div class="faux-text"></div>
+                    <div class="faux-text" style="width: 50%"></div>
+                    <div class="faux-btn" style="width: 64px; height: 24px; margin-top: 16px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Right Card -->
+        <div class="mockup-card card-tr float-3" data-parallax="0.025" data-rotate="5" data-z="-20" data-x="320" data-y="-80">
+            <div class="idle-wrapper">
+                <div class="browser-header">
+                    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                </div>
+                <div class="card-body">
+                    <div style="display: flex; gap: 16px; margin-bottom: 24px;">
+                        <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.8); border-radius: 8px;"></div>
+                        <div style="flex: 1;">
+                            <div class="faux-hero" style="width: 100%; height: 16px; margin-bottom: 8px;"></div>
+                            <div class="faux-text" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    <div class="faux-text"></div>
+                    <div class="faux-text"></div>
+                    <div class="faux-text" style="width: 40%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Left Card -->
+        <div class="mockup-card card-bl float-4" data-parallax="0.04" data-rotate="8" data-z="-60" data-x="-280" data-y="180">
+            <div class="idle-wrapper">
+                <div class="browser-header">
+                    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                </div>
+                <div class="card-body" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                    <div class="faux-hero" style="width: 60%; margin: 0 auto 12px;"></div>
+                    <div class="faux-text" style="width: 80%; margin: 0 auto 8px;"></div>
+                    <div class="faux-btn" style="margin: 16px auto 0;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Right Card -->
+        <div class="mockup-card card-br float-5" data-parallax="0.02" data-rotate="-4" data-z="-30" data-x="360" data-y="140">
+            <div class="idle-wrapper">
+                <div class="browser-header">
+                    <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                </div>
+                <div class="card-body" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div style="background: rgba(255,255,255,0.1); border-radius: 8px; height: 120px;"></div>
+                    <div style="background: rgba(255,255,255,0.1); border-radius: 8px; height: 120px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.mockup-card');
+            const isMobile = window.innerWidth <= 900;
+            
+            if (!isMobile) {
+                cards.forEach((card, index) => {
+                    const tx = card.getAttribute('data-x');
+                    const ty = card.getAttribute('data-y');
+                    const rot = card.getAttribute('data-rotate');
+                    const tz = card.getAttribute('data-z');
+                    
+                    // Entrance animation start state
+                    card.style.transform = `translate3d(0px, 150px, -300px) rotate(0deg)`;
+                    card.style.opacity = '0';
+
+                    setTimeout(() => {
+                        card.style.transition = `transform 1.2s var(--ease-spring), opacity 0.8s ease, filter 0.3s ease, box-shadow 0.3s ease`;
+                        card.style.transform = `translate3d(${tx}px, ${ty}px, ${tz}px) rotate(${rot}deg)`;
+                        card.style.opacity = '1';
+                        
+                        card.dataset.baseX = tx;
+                        card.dataset.baseY = ty;
+                        card.dataset.baseZ = tz;
+                        card.dataset.baseRot = rot;
+                    }, 100 + (index * 120));
+                });
+
+                let mouseX = 0;
+                let mouseY = 0;
+                let targetX = 0;
+                let targetY = 0;
+
+                window.addEventListener('mousemove', (e) => {
+                    const cx = window.innerWidth / 2;
+                    const cy = window.innerHeight / 2;
+                    // Normalized coordinates from -1 to 1
+                    mouseX = (e.clientX - cx) / cx;
+                    mouseY = (e.clientY - cy) / cy;
+                });
+
+                const render = () => {
+                    // Smooth lerp
+                    targetX += (mouseX - targetX) * 0.1;
+                    targetY += (mouseY - targetY) * 0.1;
+
+                    cards.forEach(card => {
+                        if (!card.matches(':hover')) {
+                            const pFactor = parseFloat(card.getAttribute('data-parallax'));
+                            const bx = parseFloat(card.dataset.baseX || 0);
+                            const by = parseFloat(card.dataset.baseY || 0);
+                            const bz = parseFloat(card.dataset.baseZ || 0);
+                            const br = parseFloat(card.dataset.baseRot || 0);
+
+                            const px = targetX * (window.innerWidth * pFactor);
+                            const py = targetY * (window.innerHeight * pFactor);
+
+                            card.style.transform = `translate3d(${bx + px}px, ${by + py}px, ${bz}px) rotate(${br}deg)`;
+                        } else {
+                            const bx = parseFloat(card.dataset.baseX || 0);
+                            const by = parseFloat(card.dataset.baseY || 0);
+                            // On hover: scale up, remove rotation, bring z-index forward visually
+                            card.style.transform = `translate3d(${bx}px, ${by}px, 40px) scale(1.05) rotate(0deg)`;
+                        }
+                    });
+
+                    requestAnimationFrame(render);
+                };
+
+                // Start loop after entrance animation finishes
+                setTimeout(() => {
+                    // Remove the transition for the parallax effect so it moves instantly with render loop
+                    cards.forEach(card => {
+                        card.style.transition = `none`;
+                    });
+                    render();
+                }, 1500);
+
+                // Hover transitions
+                cards.forEach(card => {
+                    card.addEventListener('mouseleave', () => {
+                        card.style.transition = `transform 0.4s var(--ease-spring), opacity 0.8s ease, filter 0.3s ease, box-shadow 0.3s ease`;
+                        setTimeout(() => {
+                            card.style.transition = `none`;
+                        }, 400);
+                    });
+                    
+                    card.addEventListener('mouseenter', () => {
+                        card.style.transition = `transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, filter 0.3s ease`;
+                    });
+                });
+            } else {
+                // Mobile immediate display
+                cards.forEach(card => {
+                    card.style.opacity = '1';
+                });
+            }
+        });
+    </script>
+</body>
+</html>

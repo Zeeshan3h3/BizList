@@ -102,48 +102,97 @@
   }
 }
 
-/* Parallax float variants — different speeds create depth illusion */
+/* ── Premium layered float animations (translateY only — no rotation chaos) ── */
+@keyframes ft-a {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes ft-b {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes ft-c {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes ft-d {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes ft-e {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+.ft-float-main {
+  animation: ft-a 7s ease-in-out infinite;
+}
+
+.ft-float-b {
+  animation: ft-b 9s ease-in-out infinite;
+}
+
+.ft-float-c {
+  animation: ft-c 8s ease-in-out infinite;
+}
+
+.ft-float-d {
+  animation: ft-d 10s ease-in-out infinite;
+}
+
+.ft-float-e {
+  animation: ft-e 6.5s ease-in-out infinite;
+}
+
+/* Legacy float helpers (kept for other usages) */
 @keyframes float-slow {
 
   0%,
   100% {
-    transform: translateY(0) rotate(0deg);
-  }
-
-  33% {
-    transform: translateY(-14px) rotate(0.5deg);
-  }
-
-  66% {
-    transform: translateY(-8px) rotate(-0.3deg);
-  }
-}
-
-@keyframes float-mid {
-
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-
-  40% {
-    transform: translateY(-18px) rotate(0.8deg);
-  }
-
-  70% {
-    transform: translateY(-6px) rotate(-0.5deg);
-  }
-}
-
-@keyframes float-fast {
-
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
+    transform: translateY(0);
   }
 
   50% {
-    transform: translateY(-22px) rotate(1deg);
+    transform: translateY(-12px);
   }
 }
 
@@ -178,11 +227,11 @@
 }
 
 .animate-float-mid {
-  animation: float-mid 5.5s ease-in-out infinite;
+  animation: float-slow 5.5s ease-in-out infinite;
 }
 
 .animate-float-fast {
-  animation: float-fast 3.5s ease-in-out infinite;
+  animation: float-slow 3.5s ease-in-out infinite;
 }
 
 .animate-float {

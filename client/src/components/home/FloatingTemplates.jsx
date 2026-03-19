@@ -1,203 +1,296 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, ExternalLink } from 'lucide-react';
 
-// Import user's actual template screenshots
+// Import template screenshots
 import doctorImg from '../../assets/Screenshot 2026-03-16 011740.png';
-import coachingImg from '../../assets/CoachingT.png';
 import packrightImg from '../../assets/Screenshot 2026-03-16 011704.png';
 import artisanImg from '../../assets/Screenshot 2026-03-16 011720.png';
 import lawyerImg from '../../assets/Screenshot 2026-03-16 011803.png';
 import portfolioImg from '../../assets/Screenshot 2026-03-16 011827.png';
 
-const TEMPLATES = [
+const CARDS = [
     {
-        id: 1, name: 'Dr. S.C. Santra', category: 'Medical',
-        image: doctorImg, link: 'https://drscsantra.com',
-        orbit: { radius: 0, angle: 0 }, // CENTER hero card
-        size: 'w-[300px]', depth: 1, zIndex: 20,
+        id: 1, image: doctorImg, name: 'Medical Platform', link: 'https://drscsantra.com',
+        left: '50%', top: '50%', baseZ: 0, rotate: -2, parallax: 0.015, delay: 0, zIndex: 20,
+        className: 'w-[260px] lg:w-[360px] xl:w-[440px] aspect-[16/11]', floatClass: 'ft-float-main', filter: 'none', bright: 1,
+        theme: { bg: 'bg-blue-50/50', primary: 'bg-blue-600', secondary: 'bg-blue-200' }
     },
     {
-        id: 2, name: 'Arjun Sharma', category: 'Legal',
-        image: lawyerImg, link: '#',
-        orbit: { radius: 180, angle: 30 },
-        size: 'w-[230px]', depth: 0.85, zIndex: 14,
+        id: 2, image: lawyerImg, name: 'Legal Advocate', link: '#',
+        left: '18%', top: '24%', baseZ: -40, rotate: -6, parallax: 0.03, delay: 0.15, zIndex: 18,
+        className: 'w-[140px] lg:w-[200px] xl:w-[260px] aspect-[16/11]', floatClass: 'ft-float-b', filter: 'blur(2px)', bright: 0.85,
+        theme: { bg: 'bg-slate-100/50', primary: 'bg-indigo-900', secondary: 'bg-slate-300' }
     },
     {
-        id: 3, name: 'MD Zeeshan', category: 'Portfolio',
-        image: portfolioImg, link: 'https://mdzeeshan.me',
-        orbit: { radius: 200, angle: 120 },
-        size: 'w-[220px]', depth: 0.75, zIndex: 12,
+        id: 3, image: packrightImg, name: 'B2B Commerce', link: '#',
+        left: '82%', top: '28%', baseZ: -20, rotate: 5, parallax: 0.025, delay: 0.3, zIndex: 19,
+        className: 'w-[130px] lg:w-[180px] xl:w-[240px] aspect-[16/11]', floatClass: 'ft-float-c', filter: 'blur(1px)', bright: 0.9,
+        theme: { bg: 'bg-amber-50', primary: 'bg-amber-600', secondary: 'bg-amber-200' }
     },
     {
-        id: 4, name: 'PackRight', category: 'E-Commerce',
-        image: packrightImg, link: '#',
-        orbit: { radius: 190, angle: 210 },
-        size: 'w-[240px]', depth: 0.8, zIndex: 13,
+        id: 4, image: artisanImg, name: 'Artisan Store', link: '#',
+        left: '25%', top: '76%', baseZ: -60, rotate: 8, parallax: 0.04, delay: 0.45, zIndex: 17,
+        className: 'w-[150px] lg:w-[220px] xl:w-[280px] aspect-[16/11]', floatClass: 'ft-float-d', filter: 'blur(3px)', bright: 0.8,
+        theme: { bg: 'bg-orange-50/30', primary: 'bg-orange-800', secondary: 'bg-orange-200' }
     },
     {
-        id: 5, name: 'The Learning Pro', category: 'Education',
-        image: coachingImg, link: '#',
-        orbit: { radius: 170, angle: 300 },
-        size: 'w-[210px]', depth: 0.7, zIndex: 10,
-    },
-    {
-        id: 6, name: 'Aura & Clay', category: 'Artisan',
-        image: artisanImg, link: '#',
-        orbit: { radius: 220, angle: 160 },
-        size: 'w-[200px]', depth: 0.6, zIndex: 8,
-    },
+        id: 5, image: portfolioImg, name: 'Dev Portfolio', link: '#',
+        left: '78%', top: '72%', baseZ: -30, rotate: -4, parallax: 0.02, delay: 0.6, zIndex: 16,
+        className: 'w-[160px] lg:w-[240px] xl:w-[300px] aspect-[16/11]', floatClass: 'ft-float-e', filter: 'blur(1.5px)', bright: 0.85,
+        theme: { bg: 'bg-[#111]', primary: 'bg-emerald-500', secondary: 'bg-zinc-800' }
+    }
 ];
 
-// ── Desktop Orbital Cluster ──
-const OrbitalCluster = () => {
-    const containerRef = useRef(null);
-    const [mouse, setMouse] = useState({ x: 0, y: 0 });
+const BrowserChrome = ({ compact = false, url = "" }) => (
+    <div className={`${compact ? 'h-4 lg:h-7' : 'h-10'} bg-[#1a1a1f] border-b border-white/5 flex items-center px-3 lg:px-4 gap-2 backdrop-blur-md flex-shrink-0 z-50`}>
+        <div className="flex gap-1.5">
+            <div className={`${compact ? 'w-[5px] h-[5px] lg:w-2 lg:h-2' : 'w-3 h-3'} rounded-full bg-[#FF5F56]`}></div>
+            <div className={`${compact ? 'w-[5px] h-[5px] lg:w-2 lg:h-2' : 'w-3 h-3'} rounded-full bg-[#FFBD2E]`}></div>
+            <div className={`${compact ? 'w-[5px] h-[5px] lg:w-2 lg:h-2' : 'w-3 h-3'} rounded-full bg-[#27C93F]`}></div>
+        </div>
+        <div className={`ml-2 ${compact ? 'h-1.5 lg:h-2.5 max-w-[60%]' : 'h-6 max-w-[300px] mx-auto absolute left-1/2 -translate-x-1/2'} bg-white/5 rounded-md flex-grow flex items-center justify-center`}>
+            {!compact && <span className="text-[10px] text-white/30 font-medium tracking-wide">{url}</span>}
+        </div>
+    </div>
+);
 
-    // Mouse parallax — subtle shift on hover
-    const handleMouseMove = useCallback((e) => {
-        if (!containerRef.current) return;
-        const rect = containerRef.current.getBoundingClientRect();
-        const cx = rect.left + rect.width / 2;
-        const cy = rect.top + rect.height / 2;
-        // Normalized -1 to 1, clamped
-        const nx = Math.max(-1, Math.min(1, (e.clientX - cx) / (rect.width / 2)));
-        const ny = Math.max(-1, Math.min(1, (e.clientY - cy) / (rect.height / 2)));
-        setMouse({ x: nx, y: ny });
+const FauxPage = ({ card }) => {
+    const theme = card.theme;
+    return (
+        <div className={`w-full flex-grow ${theme.bg} overflow-hidden`}>
+            <img src={card.image} alt={card.name} className="w-full h-auto object-cover object-top" />
+            {/* Scrollable faux content to simulate a full long website */}
+            <div className="p-8 sm:p-14 pb-24">
+                <div className="max-w-4xl mx-auto space-y-12">
+                    <div className="space-y-4">
+                        <div className={`h-12 w-3/4 ${theme.primary} rounded-2xl opacity-20`}></div>
+                        <div className={`h-6 w-full ${theme.secondary} rounded-xl opacity-60`}></div>
+                        <div className={`h-6 w-5/6 ${theme.secondary} rounded-xl opacity-60`}></div>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className={`h-56 ${theme.primary} rounded-3xl opacity-[0.08]`}></div>
+                        <div className={`h-56 ${theme.primary} rounded-3xl opacity-[0.08]`}></div>
+                    </div>
+                    <div className="flex gap-4">
+                        <div className={`h-14 w-40 ${theme.primary} rounded-xl opacity-90 shadow-lg`}></div>
+                        <div className={`h-14 w-40 ${theme.secondary} rounded-xl opacity-70`}></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// ── Desktop Premium Card Cluster ──
+const ParallaxShowcase = () => {
+    const containerRef = useRef(null);
+    const renderRef = useRef(null);
+    const [activeCard, setActiveCard] = useState(null);
+
+    // Prevent background scrolling when modal is open
+    useEffect(() => {
+        if (activeCard) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+    }, [activeCard]);
+
+    // Handle escape key
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') setActiveCard(null);
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
     }, []);
 
+    const mouseParams = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
+
     useEffect(() => {
-        window.addEventListener('mousemove', handleMouseMove, { passive: true });
-        return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, [handleMouseMove]);
+        const handleMouseMove = (e) => {
+            const cx = window.innerWidth / 2;
+            const cy = window.innerHeight / 2;
+            mouseParams.current.x = (e.clientX - cx) / cx;
+            mouseParams.current.y = (e.clientY - cy) / cy;
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+
+        const renderLoop = () => {
+            const p = mouseParams.current;
+            p.targetX += (p.x - p.targetX) * 0.1;
+            p.targetY += (p.y - p.targetY) * 0.1;
+
+            if (containerRef.current) {
+                const cardNodes = containerRef.current.querySelectorAll('.parallax-card-node');
+
+                cardNodes.forEach(node => {
+                    // Only apply parallax if not hovered and not active
+                    if (!node.matches(':hover') && !node.classList.contains('is-active')) {
+                        const bz = parseFloat(node.dataset.baseZ || 0);
+                        const br = parseFloat(node.dataset.baseRot || 0);
+                        const pFactor = parseFloat(node.dataset.parallax || 0);
+
+                        const px = p.targetX * (window.innerWidth * pFactor);
+                        const py = p.targetY * (window.innerHeight * pFactor);
+
+                        const clampX = Math.max(-40, Math.min(40, px));
+                        const clampY = Math.max(-40, Math.min(40, py));
+
+                        node.style.transform = `translate3d(calc(-50% + ${clampX}px), calc(-50% + ${clampY}px), ${bz}px) rotate(${br}deg)`;
+                    }
+                });
+            }
+            renderRef.current = requestAnimationFrame(renderLoop);
+        };
+
+        renderRef.current = requestAnimationFrame(renderLoop);
+
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
+            if (renderRef.current) cancelAnimationFrame(renderRef.current);
+        };
+    }, []);
 
     return (
-        <div
-            ref={containerRef}
-            className="relative w-full h-full flex items-center justify-center"
-            style={{ perspective: '1000px' }}
-        >
-            {/* ── Atmospheric Gradient Glow Layers ── */}
-            <div className="absolute inset-0 pointer-events-none">
-                {/* Primary purple-blue orb */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-gradient-radial from-indigo-500/25 via-blue-400/15 to-transparent blur-[100px] animate-glow-pulse"></div>
-                {/* Secondary cyan accent */}
-                <div className="absolute top-[30%] left-[60%] w-[300px] h-[300px] rounded-full bg-gradient-radial from-cyan-400/15 via-blue-300/8 to-transparent blur-[80px] animate-glow-drift"></div>
-                {/* Soft pink whisper */}
-                <div className="absolute top-[65%] left-[35%] w-[250px] h-[250px] rounded-full bg-gradient-radial from-violet-400/12 to-transparent blur-[90px] animate-glow-pulse" style={{ animationDelay: '3s' }}></div>
+        <div ref={containerRef} className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-auto overflow-visible" style={{ perspective: '1200px' }}>
+
+            {/* ── Background Glow Orbs ── */}
+            <div className="absolute inset-0 pointer-events-none overflow-visible">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-radial from-indigo-500/20 via-purple-500/10 to-transparent rounded-full blur-[80px]"></div>
+                <div className="absolute top-[20%] right-[15%] w-[250px] h-[250px] bg-gradient-radial from-cyan-400/15 to-transparent rounded-full blur-[70px] animate-pulse"></div>
             </div>
 
-            {/* ── Subtle Grid Texture Overlay ── */}
-            <div
-                className="absolute inset-0 pointer-events-none opacity-[0.035]"
-                style={{
-                    backgroundImage: `
-                        linear-gradient(rgba(99,102,241,0.3) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(99,102,241,0.3) 1px, transparent 1px)
-                    `,
-                    backgroundSize: '40px 40px',
-                }}
-            ></div>
+            {/* ── Card Stack ── */}
+            {CARDS.map((card, i) => {
+                const isActive = activeCard?.id === card.id;
 
-            {/* ── Orbital Container with slow rotation ── */}
-            <div
-                className="relative w-[500px] h-[500px] animate-orbit-rotate"
-                style={{
-                    transformStyle: 'preserve-3d',
-                    // Mouse parallax on the whole cluster
-                    transform: `
-                        rotateY(${mouse.x * 4}deg)
-                        rotateX(${mouse.y * -3}deg)
-                    `,
-                    transition: 'transform 0.3s ease-out',
-                }}
-            >
-                {TEMPLATES.map((tpl, i) => {
-                    const isCenter = tpl.orbit.radius === 0;
-                    const angleRad = (tpl.orbit.angle * Math.PI) / 180;
-                    const tx = isCenter ? 0 : Math.cos(angleRad) * tpl.orbit.radius;
-                    const ty = isCenter ? 0 : Math.sin(angleRad) * tpl.orbit.radius * 0.55; // Elliptical
-                    const parallaxMultiplier = tpl.depth;
-                    const mx = mouse.x * 10 * parallaxMultiplier;
-                    const my = mouse.y * 8 * parallaxMultiplier;
-
-                    return (
+                return (
+                    <motion.div
+                        key={card.id}
+                        initial={{ opacity: 0, y: 80, z: -100 }}
+                        animate={{ opacity: 1, y: 0, z: 0 }}
+                        transition={{ duration: 1.0, delay: card.delay, ease: [0.34, 1.56, 0.64, 1] }}
+                        className="absolute"
+                        style={{
+                            zIndex: isActive ? 0 : card.zIndex, // Drop zIndex when active so layoutId handles it via AnimatePresence overlay
+                            left: card.left,
+                            top: card.top,
+                            opacity: isActive ? 0 : 1, // Hide base card while modal is dominating via layoutId
+                        }}
+                        onAnimationComplete={() => {
+                            const el = document.getElementById(`parallax-card-${card.id}`);
+                            if (el && !isActive) {
+                                el.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease, box-shadow 0.4s ease';
+                                setTimeout(() => { el.style.transition = 'none'; }, 400);
+                            }
+                        }}
+                    >
                         <motion.div
-                            key={tpl.id}
-                            initial={{ opacity: 0, scale: 0.6 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            transition={{ duration: 0.8, delay: i * 0.12, ease: [0.25, 0.46, 0.45, 0.94] }}
-                            className="absolute"
+                            id={`parallax-card-${card.id}`}
+                            layoutId={`mockup-card-${card.id}`}
+                            onClick={() => setActiveCard(card)}
+                            className={`parallax-card-node block absolute group cursor-pointer ${isActive ? 'is-active pointer-events-none' : ''}`}
+                            data-base-z={card.baseZ}
+                            data-base-rot={card.rotate}
+                            data-parallax={card.parallax}
                             style={{
-                                left: '50%',
-                                top: '50%',
-                                zIndex: tpl.zIndex,
-                                transform: `
-                                    translate(-50%, -50%)
-                                    translate(${tx + mx}px, ${ty + my}px)
-                                    scale(${tpl.depth})
-                                `,
-                                transition: 'transform 0.3s ease-out',
+                                transform: `translate3d(-50%, -50%, ${card.baseZ}px) rotate(${card.rotate}deg)`,
+                            }}
+                            onMouseEnter={(e) => {
+                                if (isActive) return;
+                                e.currentTarget.style.transition = 'transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, filter 0.3s ease';
+                                e.currentTarget.style.transform = `translate3d(-50%, -50%, 60px) scale(1.08) rotate(0deg)`;
+                                e.currentTarget.style.filter = 'blur(0) brightness(1.1)';
+                                e.currentTarget.style.boxShadow = '0 32px 64px -12px rgba(0,0,0,0.4), 0 0 32px rgba(79,70,229,0.3)';
+                            }}
+                            onMouseLeave={(e) => {
+                                if (isActive) return;
+                                e.currentTarget.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease, box-shadow 0.4s ease';
+                                e.currentTarget.style.filter = `${card.filter} brightness(${card.bright})`;
+                                e.currentTarget.style.boxShadow = '0 24px 48px -12px rgba(0,0,0,0.3)';
+                                setTimeout(() => { e.currentTarget.style.transition = 'none'; }, 400);
                             }}
                         >
-                            <a
-                                href={tpl.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="block group"
-                                title={`Visit ${tpl.name}`}
-                            >
+                            <div className={isActive ? '' : card.floatClass}>
                                 <div
-                                    className={`
-                                        relative animate-card-breathe
-                                        ${isCenter ? 'animate-float-slow' : i % 2 === 0 ? 'animate-float-mid' : 'animate-float-fast'}
-                                    `}
-                                    style={{ animationDelay: `${i * 0.6}s` }}
+                                    className={`relative bg-[#19191E]/70 border border-white/10 rounded-[12px] lg:rounded-[16px] backdrop-blur-[12px] shadow-[0_24px_48px_-12px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.15)] flex flex-col overflow-hidden ${card.className}`}
+                                    style={{
+                                        filter: isActive ? 'none' : `${card.filter} brightness(${card.bright})`,
+                                    }}
                                 >
-                                    {/* Ambient glow shadow */}
-                                    <div
-                                        className="absolute -inset-4 rounded-[26px] opacity-0 group-hover:opacity-100 transition-all duration-500"
-                                        style={{
-                                            background: 'radial-gradient(circle, rgba(99,102,241,0.2) 0%, transparent 70%)',
-                                            filter: 'blur(20px)',
-                                        }}
-                                    ></div>
-
-                                    {/* Card */}
-                                    <div
-                                        className={`
-                                            relative overflow-hidden rounded-[18px] border border-white/30
-                                            transition-all duration-500
-                                            group-hover:scale-[1.06] group-hover:border-indigo-300/40
-                                            ${isCenter
-                                                ? 'shadow-[0_15px_50px_rgba(0,0,0,0.12),0_0_30px_rgba(99,102,241,0.1)]'
-                                                : 'shadow-[0_8px_30px_rgba(0,0,0,0.08)]'
-                                            }
-                                        `}
-                                        style={{
-                                            transform: `rotate(${isCenter ? 0 : (i % 2 === 0 ? 3 : -3)}deg)`,
-                                            filter: tpl.depth < 0.75 ? `blur(${(1 - tpl.depth) * 2}px)` : 'none',
-                                        }}
-                                    >
+                                    <BrowserChrome compact={true} />
+                                    <div className="flex-grow relative overflow-hidden bg-slate-900 flex items-center justify-center">
                                         <img
-                                            src={tpl.image}
-                                            alt={`${tpl.name} — ${tpl.category}`}
-                                            className={`${tpl.size} aspect-[16/10] object-cover object-top`}
+                                            src={card.image}
+                                            alt={card.name}
+                                            className="absolute top-0 left-0 w-full h-full object-cover object-top opacity-90 transition-transform duration-700 group-hover:scale-105"
                                             loading="lazy"
                                             draggable={false}
                                         />
+                                    </div>
+                                    <div className="absolute inset-0 rounded-[12px] lg:rounded-[16px] border border-white/5 pointer-events-none z-20"></div>
 
-                                        {/* Hover label */}
-                                        <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                            <p className="text-white text-[10px] font-black tracking-[0.14em] uppercase">{tpl.name}</p>
-                                            <p className="text-white/60 text-[8px] font-semibold tracking-wider uppercase mt-0.5">{tpl.category}</p>
-                                        </div>
+                                    {/* Tooltip affordance on hover */}
+                                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/10 shadow-lg opacity-0 transform translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none z-30 flex items-center gap-1.5">
+                                        <span className="text-white text-[10px] font-bold uppercase tracking-wider">Expand</span>
+                                        <ExternalLink className="w-3 h-3 text-indigo-400" />
                                     </div>
                                 </div>
-                            </a>
+                            </div>
                         </motion.div>
-                    );
-                })}
-            </div>
+                    </motion.div>
+                );
+            })}
+
+            {/* ── Modal Overlay ── */}
+            <AnimatePresence>
+                {activeCard && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center">
+                        {/* Backdrop overlay */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            onClick={() => setActiveCard(null)}
+                            className="absolute inset-0 bg-black/75 backdrop-blur-[12px]"
+                        ></motion.div>
+
+                        {/* Modal Content */}
+                        <div className="relative z-10 w-full max-w-[900px] px-4 pointer-events-none flex items-center justify-center h-full max-h-screen py-8">
+
+                            <motion.div
+                                layoutId={`mockup-card-${activeCard.id}`}
+                                transition={{ type: "spring", stiffness: 220, damping: 25, bounce: 0.1, duration: 0.5 }}
+                                className="relative w-[95vw] lg:w-[85vw] max-w-[900px] max-h-full bg-[#111] border border-white/[0.15] rounded-[16px] overflow-hidden shadow-[0_40px_120px_rgba(0,0,0,0.6)] flex flex-col pointer-events-auto"
+                            >
+                                <BrowserChrome compact={false} url={`https://${activeCard.name.replace(/\s+/g, '').toLowerCase()}.com`} />
+
+                                <div className="overflow-y-auto scrollbar-hide flex-grow select-auto bg-slate-900 relative h-full">
+                                    <FauxPage card={activeCard} />
+                                </div>
+                            </motion.div>
+
+                            {/* Close Button */}
+                            <motion.button
+                                initial={{ opacity: 0, scale: 0.5 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.5, transition: { duration: 0.2 } }}
+                                transition={{ delay: 0.2 }}
+                                onClick={() => setActiveCard(null)}
+                                className="absolute top-4 md:top-8 right-6 md:right-10 w-10 h-10 md:w-12 md:h-12 bg-white/10 hover:bg-white/20 border border-white/10 backdrop-blur-md rounded-full flex items-center justify-center z-50 transition-colors pointer-events-auto cursor-pointer group shadow-xl"
+                            >
+                                <X className="w-5 h-5 text-white/80 group-hover:text-white" />
+                            </motion.button>
+                        </div>
+                    </div>
+                )}
+            </AnimatePresence>
+
         </div>
     );
 };
@@ -205,30 +298,30 @@ const OrbitalCluster = () => {
 // ── Mobile Horizontal Scroller ──
 const MobileScroller = () => (
     <div className="md:hidden">
-        {/* Mobile glow */}
         <div className="relative">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[200px] bg-gradient-radial from-indigo-400/15 to-transparent blur-[60px] pointer-events-none"></div>
-            <div className="flex items-center h-[220px] overflow-hidden">
-                <div className="flex gap-5 animate-infinite-scroll whitespace-nowrap px-4">
-                    {[...TEMPLATES, ...TEMPLATES].map((tpl, idx) => (
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[200px] pointer-events-none"
+                style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 70%)', filter: 'blur(60px)' }}
+            />
+            <div className="flex items-center h-[300px] overflow-hidden">
+                <div className="flex gap-5 animate-infinite-scroll whitespace-nowrap px-4 py-8">
+                    {[...CARDS, ...CARDS].map((card, idx) => (
                         <a
-                            key={`${tpl.id}-${idx}`}
-                            href={tpl.link}
+                            key={`${card.id}-${idx}`}
+                            href={card.link}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-block flex-shrink-0"
                         >
-                            <div className="relative overflow-hidden rounded-2xl shadow-lg border border-white/20 w-72">
-                                <img
-                                    src={tpl.image}
-                                    alt={tpl.name}
-                                    className="w-full aspect-[16/10] object-cover object-top"
-                                    loading="lazy"
-                                    draggable={false}
-                                />
-                                <div className="absolute bottom-0 inset-x-0 bg-black/60 backdrop-blur-sm p-2.5 border-t border-white/10">
-                                    <p className="text-white text-[9px] font-black tracking-[0.12em] uppercase">{tpl.name}</p>
-                                    <p className="text-white/50 text-[8px] font-semibold tracking-wider uppercase">{tpl.category}</p>
+                            <div className="relative bg-[#19191E]/70 border border-white/10 rounded-[12px] shadow-2xl backdrop-blur-md overflow-hidden flex flex-col w-[260px] aspect-[16/11]">
+                                <BrowserChrome compact={true} />
+                                <div className="flex-grow relative overflow-hidden bg-slate-900">
+                                    <img
+                                        src={card.image}
+                                        alt={card.name}
+                                        className="absolute top-0 left-0 w-full h-full object-cover object-top opacity-90"
+                                        loading="lazy"
+                                        draggable={false}
+                                    />
                                 </div>
                             </div>
                         </a>
@@ -240,17 +333,13 @@ const MobileScroller = () => (
 );
 
 // ── Main Export ──
-const FloatingTemplates = () => {
-    return (
-        <>
-            {/* Desktop: Orbital Cluster */}
-            <div className="hidden md:block w-full h-full min-h-[580px]">
-                <OrbitalCluster />
-            </div>
-            {/* Mobile: Scroller */}
-            <MobileScroller />
-        </>
-    );
-};
+const FloatingTemplates = () => (
+    <div className="w-full h-full">
+        <div className="hidden md:block relative w-full min-h-[500px] h-[550px] overflow-visible">
+            <ParallaxShowcase />
+        </div>
+        <MobileScroller />
+    </div>
+);
 
 export default FloatingTemplates;

@@ -60,7 +60,7 @@ const HomePage = () => {
 
                 {/* Content */}
                 <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                    <div className="grid grid-cols-1 md:grid-cols-[1fr,1.1fr] gap-4 items-center">
+                    <div className="grid lg:grid-cols-[1fr_1.2fr] gap-8 items-center min-h-[85vh]">
                         <HeroSection />
 
                         {/* RIGHT COLUMN — Template Universe */}

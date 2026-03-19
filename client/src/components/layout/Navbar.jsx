@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, X, Sparkles, Building2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SignedIn, SignedOut } from "@clerk/clerk-react";
 import BizListLogo from '../ui/BizListLogo';
@@ -15,6 +15,7 @@ import CustomUserMenu from './CustomUserMenu';
 const Navbar = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const location = useLocation();
+    const navigate = useNavigate();
 
     // Determine if we are currently in Pro Mode based on the URL
     const isProMode = location.pathname.startsWith('/pro');
@@ -50,8 +51,27 @@ const Navbar = () => {
                         ))}
                     </div>
 
-                    {/* Auth Buttons */}
+                    {/* Auth Buttons & Toggles */}
                     <div className="hidden md:flex items-center space-x-4">
+
+                        {/* Pro Mode Demo Toggle */}
+                        <div className="flex items-center gap-1 bg-slate-100 p-1 xl:mr-4 rounded-xl border border-slate-200/60 shadow-inner">
+                            <button
+                                onClick={() => navigate('/')}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-all duration-300 ${!isProMode ? 'bg-white text-slate-800 font-semibold shadow-sm ring-1 ring-slate-200/50' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'}`}
+                            >
+                                <Building2 size={14} className={!isProMode ? "text-blue-600" : "text-slate-400"} />
+                                Business
+                            </button>
+                            <button
+                                onClick={() => navigate('/pro')}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-all duration-300 ${isProMode ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold shadow-sm' : 'text-slate-500 hover:text-slate-700 hover:bg-slate-200/50'}`}
+                            >
+                                <Sparkles size={14} className={isProMode ? "text-amber-300" : "text-slate-400"} />
+                                Pro Mode
+                            </button>
+                        </div>
+
                         <SignedOut>
                             <Link to="/sign-in" className="px-4 py-2 text-slate-700 hover:text-primary transition-colors">
                                 Login
@@ -96,6 +116,24 @@ const Navbar = () => {
                                 </Link>
                             ))}
                             <div className="pt-4 border-t border-slate-200 space-y-2">
+                                {/* Mobile Pro Mode Toggle */}
+                                <div className="flex bg-slate-100 p-1 rounded-xl mb-4">
+                                    <button
+                                        onClick={() => { navigate('/'); setMobileMenuOpen(false); }}
+                                        className={`flex-1 flex justify-center items-center gap-1.5 px-3 py-2 text-sm rounded-lg transition-all ${!isProMode ? 'bg-white text-slate-800 font-semibold shadow-sm' : 'text-slate-500'}`}
+                                    >
+                                        <Building2 size={14} className={!isProMode ? "text-blue-600" : "text-slate-400"} />
+                                        Business
+                                    </button>
+                                    <button
+                                        onClick={() => { navigate('/pro'); setMobileMenuOpen(false); }}
+                                        className={`flex-1 flex justify-center items-center gap-1.5 px-3 py-2 text-sm rounded-lg transition-all ${isProMode ? 'bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold shadow-sm' : 'text-slate-500'}`}
+                                    >
+                                        <Sparkles size={14} className={isProMode ? "text-amber-300" : "text-slate-400"} />
+                                        Pro Mode
+                                    </button>
+                                </div>
+
                                 <SignedOut>
                                     <Link
                                         to="/sign-in"
