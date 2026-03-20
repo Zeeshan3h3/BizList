@@ -9,6 +9,8 @@ import lawyerImage from '../assets/Screenshot 2026-03-16 011803.png';
 import portfolioImage from '../assets/Screenshot 2026-03-16 011827.png';
 import artisanImage from '../assets/Screenshot 2026-03-16 011720.png';
 import packrightImage from '../assets/Screenshot 2026-03-16 011704.png';
+import footwearImage from '../assets/Screenshot 2026-03-20 095755.png';
+import banquetImage from '../assets/Screenshot 2026-03-20 101856.png';
 
 const TEMPLATES_TEXT = {
     title: "Website Templates for Local Businesses",
@@ -132,6 +134,34 @@ const TEMPLATES_TEXT = {
                 "Staff Selection & Booking",
                 "Photo Gallery Portfolio",
                 "Automated SMS Reminders"
+            ]
+        },
+        {
+            name: "Premium Footwear Store",
+            code: "SHOE-01",
+            category: "Retail & E-Commerce",
+            description: "A sleek, conversion-optimised storefront for shoe brands and footwear retailers. Features high-impact hero sections and intuitive product discovery.",
+            demoUrl: "https://footdemo-beta.vercel.app/",
+            image: footwearImage,
+            features: [
+                "Dynamic Product Galleries",
+                "Advanced Filtering & Search",
+                "Customer Reviews & Ratings",
+                "Responsive Mobile Checkout"
+            ]
+        },
+        {
+            name: "Luxury Banquet & Venues",
+            code: "VENUE-01",
+            category: "Events & Hospitality",
+            description: "An elegant, trust-building website designed for banquet halls, wedding venues, and event spaces. Showcases your venue's grandeur to attract high-ticket bookings.",
+            demoUrl: "https://banquetdemo-lilac.vercel.app/",
+            image: banquetImage,
+            features: [
+                "Immersive Video/Image Galleries",
+                "Venue Capacity & Layout Showcase",
+                "Lead Generation Booking Form",
+                "Client Testimonials & Trust Badges"
             ]
         },
     ]
