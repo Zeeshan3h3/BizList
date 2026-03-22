@@ -105,6 +105,18 @@ const TemplateCard = ({ template, viewMode = "Grid" }) => {
                     <div className="flex items-center justify-between pt-5 mt-auto border-t border-[rgba(255,255,255,0.07)] relative z-10">
                         <CategoryBadge />
                     </div>
+
+                    {/* MOBILE ACTIONS (List View) */}
+                    <div className="flex sm:hidden flex-col gap-2 mt-5">
+                        <a href={useTemplateLink} target="_blank" rel="noopener noreferrer" className="w-full text-center py-2.5 rounded-lg font-bold text-sm bg-[#2563eb] text-white active:bg-[#3b82f6]">
+                            Use Template
+                        </a>
+                        {template.demoUrl && template.demoUrl !== '#' && (
+                            <a href={template.demoUrl} target="_blank" rel="noopener noreferrer" className="w-full text-center py-2.5 rounded-lg font-bold text-sm border border-slate-600 text-slate-300 active:bg-slate-800">
+                                Preview
+                            </a>
+                        )}
+                    </div>
                 </div>
             </div>
         );
@@ -142,8 +154,8 @@ const TemplateCard = ({ template, viewMode = "Grid" }) => {
                     </div>
                 )}
 
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-[#0f172a]/90 backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col sm:flex-row items-center justify-center gap-3 px-5 z-20">
+                {/* Hover Overlay Desktop */}
+                <div className="absolute inset-0 bg-[#0f172a]/90 backdrop-blur-md opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 hidden lg:flex flex-col sm:flex-row items-center justify-center gap-3 px-5 z-20">
                     {template.demoUrl && template.demoUrl !== '#' && (
                         <a href={template.demoUrl} target="_blank" rel="noopener noreferrer" className="flex-1 w-full text-center py-3 rounded-lg font-bold text-sm border-2 border-white/20 text-white hover:bg-white hover:text-[#0f172a] transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95">
                             <Eye className="w-4 h-4" /> Preview
@@ -171,6 +183,18 @@ const TemplateCard = ({ template, viewMode = "Grid" }) => {
                 {/* FOOTER ROW */}
                 <div className="flex items-center justify-between pt-5 mt-auto border-t border-[rgba(255,255,255,0.07)] relative z-10">
                     <CategoryBadge />
+                </div>
+
+                {/* MOBILE ACTIONS (Grid View) */}
+                <div className="flex lg:hidden flex-col gap-2 mt-5">
+                    <a href={useTemplateLink} target="_blank" rel="noopener noreferrer" className="w-full text-center py-2.5 rounded-lg font-bold text-sm bg-[#2563eb] text-white active:bg-[#3b82f6]">
+                        Use Template
+                    </a>
+                    {template.demoUrl && template.demoUrl !== '#' && (
+                        <a href={template.demoUrl} target="_blank" rel="noopener noreferrer" className="w-full text-center py-2.5 rounded-lg font-bold text-sm border border-slate-600 text-slate-300 active:bg-slate-800">
+                            Preview
+                        </a>
+                    )}
                 </div>
             </div>
         </div>

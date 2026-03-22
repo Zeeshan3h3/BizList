@@ -246,28 +246,28 @@ const TemplatesPage = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.1 }}
-                        className="w-full max-w-[620px] relative group mb-8"
+                        className="w-full max-w-[620px] relative group mb-10 md:mb-8 mx-auto"
                     >
                         <div className="relative flex items-center">
-                            <span className="absolute left-6 text-xl group-focus-within:scale-110 transition-transform">🔍</span>
+                            <span className="absolute left-4 md:left-6 text-lg md:text-xl group-focus-within:scale-110 transition-transform">🔍</span>
                             <input
                                 type="text"
-                                placeholder="Search templates... e.g. Restaurant, Salon, Plumber"
+                                placeholder="Search templates..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-slate-900/80 backdrop-blur-xl border border-white/10 text-white placeholder:text-slate-500 rounded-full py-4 pl-16 pr-36 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:shadow-[0_8px_40px_rgba(37,99,235,0.1)] focus:shadow-[0_0_40px_rgba(37,99,235,0.3)] text-[16px] min-h-[64px]"
+                                className="w-full bg-slate-900/80 backdrop-blur-xl border border-white/10 text-white placeholder:text-slate-500 rounded-full py-4 pl-12 md:pl-16 pr-[110px] md:pr-[140px] outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 transition-all shadow-[0_8px_32px_rgba(0,0,0,0.4)] hover:shadow-[0_8px_40px_rgba(37,99,235,0.1)] focus:shadow-[0_0_40px_rgba(37,99,235,0.3)] text-[15px] md:text-[16px] min-h-[56px] md:min-h-[64px]"
                             />
-                            <div className="absolute right-2 flex items-center gap-1.5">
+                            <div className="absolute right-2 flex items-center gap-1 md:gap-1.5">
                                 {searchQuery && (
                                     <button
                                         onClick={() => { setSearchQuery(""); document.querySelector('input[placeholder^="Search"]').focus(); }}
-                                        className="text-slate-400 hover:text-white p-2 rounded-full transition-colors hover:bg-slate-800"
+                                        className="text-slate-400 hover:text-white p-1.5 md:p-2 rounded-full transition-colors hover:bg-slate-800"
                                         aria-label="Clear search"
                                     >
-                                        <X className="w-5 h-5" />
+                                        <X className="w-4 h-4 md:w-5 md:h-5" />
                                     </button>
                                 )}
-                                <button className="bg-[#2563eb] hover:bg-[#3b82f6] text-white font-medium py-2.5 px-6 rounded-full transition-colors shadow-[0_0_20px_rgba(37,99,235,0.4)] min-h-[48px]">
+                                <button className="bg-[#2563eb] hover:bg-[#3b82f6] text-white font-medium py-2 px-4 md:py-2.5 md:px-6 rounded-full transition-colors shadow-[0_0_20px_rgba(37,99,235,0.4)] text-sm md:text-base min-h-[40px] md:min-h-[48px]">
                                     Search
                                 </button>
                             </div>
@@ -282,7 +282,7 @@ const TemplatesPage = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="text-5xl md:text-6xl font-syne font-extrabold text-white mb-4 tracking-tight leading-tight"
+                        className="text-4xl md:text-5xl lg:text-6xl font-syne font-extrabold text-white mb-4 tracking-tight leading-tight px-2"
                     >
                         Website Templates for <br className="hidden sm:block" />
                         <span className="bg-gradient-to-r from-[#2563eb] to-[#06b6d4] bg-clip-text text-transparent drop-shadow-[0_0_30px_rgba(6,182,212,0.3)]">
@@ -294,7 +294,7 @@ const TemplatesPage = () => {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.3 }}
-                        className="text-xl text-[#64748b] max-w-2xl mx-auto leading-relaxed font-medium"
+                        className="text-lg md:text-xl text-[#64748b] max-w-2xl mx-auto leading-relaxed font-medium px-4"
                     >
                         {TEMPLATES_TEXT.subtitle}
                     </motion.p>
@@ -303,29 +303,29 @@ const TemplatesPage = () => {
 
             {/* 3. TRUST STRIP */}
             <div className="border-y border-white/5 font-dm-sans bg-[#0a0f1e]/80 relative z-20 shadow-[0_20px_40px_-20px_rgba(0,0,0,0.5)]">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-                    <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 text-[13px] md:text-sm font-medium text-[#64748b]">
-                        <div className="flex items-center gap-2"><span className="text-xl leading-none">⚡</span> Instant one-click setup</div>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-5">
+                    <div className="flex flex-wrap justify-center items-center gap-x-4 md:gap-x-8 gap-y-3 text-[12px] sm:text-[13px] md:text-sm font-medium text-[#64748b]">
+                        <div className="flex items-center gap-1.5 md:gap-2"><span className="text-lg md:text-xl leading-none">⚡</span> Instant setup</div>
+                        <div className="hidden sm:block w-1 h-1 rounded-full bg-slate-700"></div>
+                        <div className="flex items-center gap-1.5 md:gap-2"><span className="text-lg md:text-xl leading-none">📱</span> 100% mobile-ready</div>
                         <div className="hidden md:block w-1 h-1 rounded-full bg-slate-700"></div>
-                        <div className="flex items-center gap-2"><span className="text-xl leading-none">📱</span> 100% mobile-ready</div>
-                        <div className="hidden md:block w-1 h-1 rounded-full bg-slate-700"></div>
-                        <div className="flex items-center gap-2"><span className="text-xl leading-none">🎯</span> 2,000+ businesses trust us</div>
+                        <div className="flex items-center gap-1.5 md:gap-2"><span className="text-lg md:text-xl leading-none">🎯</span> 2K+ trusted</div>
                         <div className="hidden lg:block w-1 h-1 rounded-full bg-slate-700"></div>
-                        <div className="flex items-center gap-2"><span className="text-xl leading-none">🔒</span> SSL included</div>
+                        <div className="flex items-center gap-1.5 md:gap-2"><span className="text-lg md:text-xl leading-none">🔒</span> SSL included</div>
                         <div className="hidden lg:block w-1 h-1 rounded-full bg-slate-700"></div>
-                        <div className="flex items-center gap-2"><span className="text-xl leading-none">🆓</span> Free templates available</div>
+                        <div className="flex items-center gap-1.5 md:gap-2"><span className="text-lg md:text-xl leading-none">🆓</span> Free templates</div>
                     </div>
                 </div>
             </div>
 
             {/* 4. FILTERS BAR */}
-            <section className="pt-8 pb-6 bg-[#0a0f1e] font-dm-sans sticky top-0 z-40 border-b border-[rgba(255,255,255,0.07)] backdrop-blur-xl bg-[#0a0f1e]/80 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.5)]">
+            <section className="pt-6 pb-4 md:pt-8 md:pb-6 bg-[#0a0f1e] font-dm-sans sticky top-0 z-40 border-b border-[rgba(255,255,255,0.07)] backdrop-blur-xl bg-[#0a0f1e]/80 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.5)] max-h-[140px] md:max-h-none overflow-visible">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6">
 
                         {/* Categories List */}
-                        <div className="flex-1 w-full overflow-x-auto pb-2 scrollbar-hide -mb-2">
-                            <div className="flex gap-3 min-w-max">
+                        <div className="flex-1 w-full overflow-x-auto pb-3 md:pb-2 scrollbar-hide -mb-3 md:-mb-2 relative">
+                            <div className="flex gap-2.5 md:gap-3 min-w-max pr-4">
                                 {ALL_CATEGORIES.map(cat => (
                                     <button
                                         key={cat}
