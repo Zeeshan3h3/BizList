@@ -143,7 +143,7 @@ const TEMPLATES_TEXT = {
             category: "Retail & E-Commerce",
             description: "A sleek, conversion-optimised storefront for shoe brands and footwear retailers. Features high-impact hero sections and intuitive product discovery.",
             demoUrl: "https://footdemo-beta.vercel.app/",
-            image: footwearImage,
+            image: banquetImage,
             features: [
                 "Dynamic Product Galleries",
                 "Advanced Filtering & Search",
@@ -157,7 +157,7 @@ const TEMPLATES_TEXT = {
             category: "Events & Hospitality",
             description: "An elegant, trust-building website designed for banquet halls, wedding venues, and event spaces. Showcases your venue's grandeur to attract high-ticket bookings.",
             demoUrl: "https://banquetdemo-lilac.vercel.app/",
-            image: banquetImage,
+            image: footwearImage,
             features: [
                 "Immersive Video/Image Galleries",
                 "Venue Capacity & Layout Showcase",
