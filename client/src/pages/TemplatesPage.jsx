@@ -11,6 +11,7 @@ import artisanImage from '../assets/Screenshot 2026-03-16 011720.png';
 import packrightImage from '../assets/Screenshot 2026-03-16 011704.png';
 import footwearImage from '../assets/Screenshot 2026-03-20 095755.png';
 import banquetImage from '../assets/Screenshot 2026-03-20 101856.png';
+import saloonImage from '../assets/saloontemp.png';
 
 const TEMPLATES_TEXT = {
     title: "Website Templates for Local Businesses",
@@ -127,8 +128,8 @@ const TEMPLATES_TEXT = {
             code: "SPA-01",
             category: "Beauty & Spa",
             description: "A beautiful, relaxing aesthetic with easy service selection and staff booking capabilities.",
-            demoUrl: "https://precious-llama-4bb4e2.netlify.app/",
-            image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?q=80&w=2574&auto=format&fit=crop",
+            demoUrl: "https://saloondemo-ten.vercel.app/",
+            image: saloonImage,
             features: [
                 "Service Catalog with Pricing",
                 "Staff Selection & Booking",
