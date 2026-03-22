@@ -1,9 +1,9 @@
 import React from 'react';
-import logoImage from '../../assets/image.png';
+import logoImage from '../../assets/bizlist-logo.png';
 
 /**
  * BizList Logo Component
- * Uses the newly uploaded lightning bolt logo
+ * Uses the uploaded logo image (laptop with shopping cart)
  */
 const BizListLogo = ({ className = "", showTagline = false }) => {
     return (
@@ -11,7 +11,7 @@ const BizListLogo = ({ className = "", showTagline = false }) => {
             <img
                 src={logoImage}
                 alt="BizList - Make Your Business Official Online"
-                className="h-10 w-auto object-contain"
+                className="h-16 w-auto"
             />
             {showTagline && (
                 <span className="text-xs text-slate-500 hidden lg:block ml-2">
