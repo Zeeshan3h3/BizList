@@ -13,6 +13,7 @@ import packrightImage from '../assets/Screenshot 2026-03-16 011704.png';
 import footwearImage from '../assets/footware.png';
 import banquetImage from '../assets/banquet.png';
 import saloonImage from '../assets/saloontemp.png';
+import resturantImage from '../assets/resturant.png';
 
 const ALL_CATEGORIES = [
     "All Templates", "🍕 Food & Dining", "💅 Beauty & Salon", "🏥 Health & Clinic",
@@ -113,8 +114,8 @@ const TEMPLATES_TEXT = {
             code: "REST-01",
             category: "🍕 Food & Dining",
             description: "Show appetizing menus and take direct orders online without paying third-party commission fees.",
-            demoUrl: "https://precious-llama-4bb4e2.netlify.app/",
-            image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2670&auto=format&fit=crop",
+            demoUrl: "https://resturantdemo-one.vercel.app/",
+            image: resturantImage,
             emoji: "🍔",
             gradient: "from-rose-500 to-red-900",
             badge: "Popular",
