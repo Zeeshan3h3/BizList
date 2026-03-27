@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Eye, Star, Users, ExternalLink } from 'lucide-react';
-import { fetchTemplate, useTemplate as useTemplateApi } from '../utils/reviewApi';
+import { fetchTemplate, useTemplate as useTemplateApi, seedTemplates } from '../utils/reviewApi';
 import ReviewSection from '../components/ReviewSection';
 import PageWrapper from '../components/layout/PageWrapper';
 import doctorImage from '../assets/Doctor_template.png';
@@ -50,7 +50,7 @@ const TemplateDetailPage = () => {
                 if (local) {
                     setTemplate({ ...local, averageRating: 0, totalReviews: 0, usageCount: 0 });
                     // Silently trigger seed so DB is populated for next time
-                    fetch('/api/templates/seed', { method: 'POST' }).catch(() => { });
+                    seedTemplates().catch(() => { });
                 } else {
                     setError('Template not found');
                 }

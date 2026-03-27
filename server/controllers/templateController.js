@@ -120,7 +120,7 @@ exports.useTemplate = async (req, res) => {
  */
 exports.seedTemplates = async (req, res) => {
     try {
-        const templates = [
+        const HARDCODED_TEMPLATES = [
             {
                 name: "Doctor Appointment Website",
                 code: "MED-01",
@@ -250,14 +250,13 @@ exports.seedTemplates = async (req, res) => {
                 badge: "Popular",
                 price: "$79",
                 isFree: false,
-                features: ["Immersive Galleries", "Venue Capacity Info", "Lead Gen Form"]
             }
         ];
 
         let created = 0;
         let skipped = 0;
 
-        for (const t of templates) {
+        for (const t of HARDCODED_TEMPLATES) {
             const exists = await Template.findOne({ code: t.code });
             if (!exists) {
                 await Template.create(t);
@@ -276,3 +275,5 @@ exports.seedTemplates = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error seeding templates' });
     }
 };
+
+exports.HARDCODED_TEMPLATES = HARDCODED_TEMPLATES;

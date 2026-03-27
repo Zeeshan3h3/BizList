@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Review = require('../models/Review');
 const Template = require('../models/Template');
 
+const { HARDCODED_TEMPLATES } = require('./templateController');
+
 /**
  * Resolve templateId param — could be a MongoDB ObjectId or a template code
  * Returns the template document or null
@@ -14,6 +16,17 @@ async function resolveTemplate(templateId) {
     if (!template) {
         template = await Template.findOne({ code: templateId }).lean();
     }
+
+    // Auto-seed on the fly if it exists in hardcoded list but not in DB
+    if (!template) {
+        const hardcoded = HARDCODED_TEMPLATES.find(t => t.code === templateId);
+        if (hardcoded) {
+            console.log(`Auto-seeding missing template: ${templateId}`);
+            template = await Template.create(hardcoded);
+            template = template.toObject(); // Make it a plain object like .lean()
+        }
+    }
+
     return template;
 }
 

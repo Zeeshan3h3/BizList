@@ -85,3 +85,15 @@ export async function deleteReview(reviewId, clerkUserId) {
     if (!res.ok) throw new Error(data.message || 'Failed to delete review');
     return data;
 }
+
+/**
+ * Seed templates into DB if missing
+ */
+export async function seedTemplates() {
+    const res = await fetch(`${API_URL}/api/templates/seed`, {
+        method: 'POST'
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Failed to seed templates');
+    return data;
+}
