@@ -4,6 +4,29 @@ import { ArrowLeft, Eye, Star, Users, ExternalLink } from 'lucide-react';
 import { fetchTemplate, useTemplate as useTemplateApi } from '../utils/reviewApi';
 import ReviewSection from '../components/ReviewSection';
 import PageWrapper from '../components/layout/PageWrapper';
+import doctorImage from '../assets/Doctor_template.png';
+import CoachingImage from '../assets/CoachingT.png';
+import lawyerImage from '../assets/advocateweb.png';
+import portfolioImage from '../assets/Screenshot 2026-03-16 011827.png';
+import artisanImage from '../assets/Screenshot 2026-03-16 011720.png';
+import packrightImage from '../assets/Screenshot 2026-03-16 011704.png';
+import footwearImage from '../assets/footware.png';
+import banquetImage from '../assets/banquet.png';
+import saloonImage from '../assets/saloontemp.png';
+
+// Local fallback data — mirrors TemplatesPage so the detail page always works
+const LOCAL_TEMPLATES = [
+    { code: "MED-01", name: "Doctor Appointment Website", category: "🏥 Health & Clinic", description: "A professional design focused on patient trust. Includes built-in appointment booking, review showcasing, and an About section for Doctors.", demoUrl: "https://docdemo-chi.vercel.app/", image: doctorImage, emoji: "👨‍⚕️", gradient: "from-blue-600 to-indigo-900", badge: "Popular", price: "$49", features: ["Online Appointment Booking", "Patient Review Integration", "Service & Treatment Pages"] },
+    { code: "LAW-01", name: "Legal Advocate Website", category: "⚖️ Legal & Law", description: "A premium, trust-inspiring website for lawyers and legal advocates. Showcases expertise, case results, and makes consultation booking seamless.", demoUrl: "https://advdemo.vercel.app/", image: lawyerImage, emoji: "⚖️", gradient: "from-slate-600 to-slate-900", badge: "Pro", price: "$59", features: ["Practice Areas Showcase", "Notable Case Results Section", "Consultation Booking Form"] },
+    { code: "PORT-01", name: "Developer Portfolio Website", category: "👨‍💻 Portfolio", description: "A futuristic, dark-themed portfolio for developers, engineers, and tech professionals.", demoUrl: "https://portfolio-client-beta-beryl.vercel.app/", image: portfolioImage, emoji: "💻", gradient: "from-indigo-600 to-purple-900", badge: "New", price: "Free", features: ["Animated Hero with Role Typewriter", "Skills & Expertise", "Projects Grid"] },
+    { code: "ART-01", name: "Artisan & Homemade Store", category: "🛍️ Retail", description: "An elegant, warm-toned website for handmade product sellers, craft stores, and artisan businesses.", demoUrl: "https://homemadedemo-1fy42zb7i-zeeshan3h3s-projects.vercel.app/", image: artisanImage, emoji: "🏺", gradient: "from-orange-500 to-red-900", badge: "Free", price: "Free", features: ["Product Collection", "Brand Story", "Gallery Section"] },
+    { code: "EDU-01", name: "Coaching Institute Website", category: "📚 Education", description: "Highlight course details, student success stories, and make enrollment easy for prospective students.", demoUrl: "https://demowebsite-kohl.vercel.app/", image: CoachingImage, emoji: "🎓", gradient: "from-emerald-500 to-teal-900", badge: "Popular", price: "$39", features: ["Course & Batch Listings", "Student Results", "Fee Payment Integration"] },
+    { code: "PACK-01", name: "Packaging & B2B Store", category: "📦 Packaging & B2B", description: "A bold, conversion-optimised storefront for packaging suppliers, wholesalers, and B2B product businesses.", demoUrl: "#", image: packrightImage, emoji: "📦", gradient: "from-amber-500 to-yellow-900", badge: "Pro", price: "$69", features: ["Product Category Navigation", "Custom Quote Request Form", "Bulk Order Enquiry System"] },
+    { code: "REST-01", name: "Restaurant Ordering Website", category: "🍕 Food & Dining", description: "Show appetizing menus and take direct orders online without paying third-party commission fees.", demoUrl: "https://precious-llama-4bb4e2.netlify.app/", image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=2670&auto=format&fit=crop", emoji: "🍔", gradient: "from-rose-500 to-red-900", badge: "Popular", price: "$49", features: ["Digital Menu", "Direct Online Ordering", "Table Reservation"] },
+    { code: "SPA-01", name: "Salon Booking Website", category: "💅 Beauty & Salon", description: "A beautiful, relaxing aesthetic with easy service selection and staff booking capabilities.", demoUrl: "https://saloondemo-ten.vercel.app/", image: saloonImage, emoji: "✂️", gradient: "from-fuchsia-500 to-pink-900", badge: "New", price: "$39", features: ["Service Catalog", "Staff Selection & Booking", "Gallery Portfolio"] },
+    { code: "SHOE-01", name: "Premium Footwear Store", category: "🛍️ Retail", description: "A sleek, conversion-optimised storefront for shoe brands and footwear retailers.", demoUrl: "https://footdemo-beta.vercel.app/", image: footwearImage, emoji: "👟", gradient: "from-violet-500 to-purple-900", badge: "Pro", price: "$59", features: ["Dynamic Product Galleries", "Advanced Filtering", "Customer Reviews"] },
+    { code: "VENUE-01", name: "Luxury Banquet & Venues", category: "🎉 Events & Venues", description: "An elegant, trust-building website designed for banquet halls, wedding venues, and event spaces.", demoUrl: "https://banquetdemo-lilac.vercel.app/", image: banquetImage, emoji: "🏰", gradient: "from-yellow-400 to-amber-900", badge: "Popular", price: "$79", features: ["Immersive Galleries", "Venue Capacity Info", "Lead Gen Form"] },
+];
 
 const TemplateDetailPage = () => {
     const { templateId } = useParams();
@@ -16,9 +39,21 @@ const TemplateDetailPage = () => {
             try {
                 setLoading(true);
                 const data = await fetchTemplate(templateId);
-                setTemplate(data.template);
+                // Merge backend data (stats, _id) with local data (images)
+                const local = LOCAL_TEMPLATES.find(t => t.code === (data.template.code || templateId));
+                setTemplate({ ...data.template, image: local?.image || data.template.previewImage });
             } catch (err) {
-                setError(err.message);
+                // API failed (not seeded yet, or network error) — fall back to local data
+                const local = LOCAL_TEMPLATES.find(
+                    t => t.code === templateId || t._id === templateId
+                );
+                if (local) {
+                    setTemplate({ ...local, averageRating: 0, totalReviews: 0, usageCount: 0 });
+                    // Silently trigger seed so DB is populated for next time
+                    fetch('/api/templates/seed', { method: 'POST' }).catch(() => { });
+                } else {
+                    setError('Template not found');
+                }
             } finally {
                 setLoading(false);
             }
@@ -106,10 +141,10 @@ const TemplateDetailPage = () => {
                     {/* Template Header Card */}
                     <div className="bg-[#0f172a] rounded-2xl border border-white/10 overflow-hidden shadow-2xl mb-12">
                         {/* Preview Image */}
-                        <div className={`h-72 md:h-96 relative overflow-hidden ${template.previewImage ? 'bg-slate-800' : `bg-gradient-to-br ${template.gradient || 'from-slate-800 to-slate-900'}`}`}>
-                            {template.previewImage ? (
+                        <div className={`h-72 md:h-96 relative overflow-hidden ${template.image ? 'bg-slate-800' : `bg-gradient-to-br ${template.gradient || 'from-slate-800 to-slate-900'}`}`}>
+                            {template.image ? (
                                 <img
-                                    src={template.previewImage}
+                                    src={template.image}
                                     alt={template.name}
                                     className="w-full h-full object-cover"
                                 />
