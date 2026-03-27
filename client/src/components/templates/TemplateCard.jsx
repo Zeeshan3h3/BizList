@@ -1,7 +1,17 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Eye, Star, Check } from 'lucide-react';
 
 const TemplateCard = ({ template, viewMode = "Grid" }) => {
+    const navigate = useNavigate();
+    const cardId = template._id || template.code;
+
+    const handleCardClick = (e) => {
+        // Don't navigate if user clicked a button or link
+        if (e.target.closest('a') || e.target.closest('button')) return;
+        navigate(`/templates/${cardId}`);
+    };
+
     // Determine badge colors based on exact prompt specifications
     const getBadgeStyle = (badge) => {
         switch (badge) {
@@ -29,6 +39,20 @@ const TemplateCard = ({ template, viewMode = "Grid" }) => {
         </span>
     );
 
+    const renderStars = (rating) => {
+        const r = Math.round(parseFloat(rating) || 0);
+        return (
+            <div className="flex items-center gap-0.5">
+                {[...Array(5)].map((_, i) => (
+                    <Star
+                        key={i}
+                        className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${i < r ? 'text-amber-400 fill-amber-400' : 'text-slate-600 fill-slate-800'}`}
+                    />
+                ))}
+            </div>
+        );
+    };
+
     const useTemplateLink = `https://wa.me/919088260058?text=${encodeURIComponent(`Hey, I want to use the ${template.name} template (Code: ${template.code}).`)}`;
 
     const hoverEffects = "hover:-translate-y-1.5 hover:scale-[1.01] hover:border-blue-500/60 hover:shadow-[0_20px_40px_-10px_rgba(37,99,235,0.25),inset_0_0_20px_rgba(37,99,235,0.05)]";
@@ -36,7 +60,7 @@ const TemplateCard = ({ template, viewMode = "Grid" }) => {
 
     if (viewMode === 'List') {
         return (
-            <div className={`${baseCardStyle} flex-col sm:flex-row ${hoverEffects}`}>
+            <div onClick={handleCardClick} className={`${baseCardStyle} flex-col sm:flex-row cursor-pointer ${hoverEffects}`}>
                 {/* Thumbnail */}
                 <div className={`sm:w-[320px] h-[240px] sm:h-auto border-r border-[rgba(255,255,255,0.07)] relative flex items-center justify-center shrink-0 ${template.image ? 'bg-slate-800' : `bg-gradient-to-br ${template.gradient || 'from-slate-800 to-slate-900'}`} overflow-hidden`}>
                     {!template.image && (
@@ -104,6 +128,19 @@ const TemplateCard = ({ template, viewMode = "Grid" }) => {
 
                     <div className="flex items-center justify-between pt-5 mt-auto border-t border-[rgba(255,255,255,0.07)] relative z-10">
                         <CategoryBadge />
+                        {template.totalReviews > 0 ? (
+                            <div className="flex items-center text-sm gap-1.5">
+                                {renderStars(template.averageRating)}
+                                <span className="text-white font-semibold">{template.averageRating}</span>
+                                <span className="text-slate-500">({template.totalReviews})</span>
+                            </div>
+                        ) : (
+                            <div className="flex items-center text-sm gap-1.5 opacity-60">
+                                {renderStars(0)}
+                                <span className="text-white font-semibold">0.0</span>
+                                <span className="text-slate-500">(0)</span>
+                            </div>
+                        )}
                     </div>
 
                     {/* MOBILE ACTIONS (List View) */}
@@ -123,7 +160,7 @@ const TemplateCard = ({ template, viewMode = "Grid" }) => {
     }
 
     return (
-        <div className={`${baseCardStyle} flex-col ${hoverEffects}`}>
+        <div onClick={handleCardClick} className={`${baseCardStyle} flex-col cursor-pointer ${hoverEffects}`}>
             {/* THUMBNAIL AREA */}
             <div className={`h-[220px] w-full border-b border-[rgba(255,255,255,0.07)] relative flex items-center justify-center overflow-hidden shrink-0 ${template.image ? 'bg-slate-800' : `bg-gradient-to-br ${template.gradient || 'from-slate-800 to-slate-900'}`} shadow-inner`}>
                 {!template.image && (
@@ -183,6 +220,19 @@ const TemplateCard = ({ template, viewMode = "Grid" }) => {
                 {/* FOOTER ROW */}
                 <div className="flex items-center justify-between pt-5 mt-auto border-t border-[rgba(255,255,255,0.07)] relative z-10">
                     <CategoryBadge />
+                    {template.totalReviews > 0 ? (
+                        <div className="flex items-center text-sm gap-1.5">
+                            {renderStars(template.averageRating)}
+                            <span className="text-white font-semibold">{template.averageRating}</span>
+                            <span className="text-slate-500">({template.totalReviews})</span>
+                        </div>
+                    ) : (
+                        <div className="flex items-center text-sm gap-1.5 opacity-60">
+                            {renderStars(0)}
+                            <span className="text-white font-semibold">0.0</span>
+                            <span className="text-slate-500">(0)</span>
+                        </div>
+                    )}
                 </div>
 
                 {/* MOBILE ACTIONS (Grid View) */}

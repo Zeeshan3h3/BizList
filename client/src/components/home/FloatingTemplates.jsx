@@ -6,7 +6,7 @@ import { X, ExternalLink } from 'lucide-react';
 import doctorImg from '../../assets/Screenshot 2026-03-16 011740.png';
 import packrightImg from '../../assets/Screenshot 2026-03-16 011704.png';
 import artisanImg from '../../assets/Screenshot 2026-03-16 011720.png';
-import lawyerImg from '../../assets/Screenshot 2026-03-16 011803.png';
+import lawyerImg from '../../assets/advocateweb.png';
 import portfolioImg from '../../assets/Screenshot 2026-03-16 011827.png';
 
 const CARDS = [

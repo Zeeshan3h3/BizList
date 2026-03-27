@@ -17,6 +17,7 @@ import ContactPage from './pages/ContactPage';
 import AboutPage from './pages/AboutPage';
 import BlogPage from './pages/BlogPage';
 import TemplatesPage from './pages/TemplatesPage';
+import TemplateDetailPage from './pages/TemplateDetailPage';
 import PricingPage from './pages/PricingPage';
 import RecentAuditsPage from './pages/RecentAuditsPage';
 
@@ -46,6 +47,7 @@ function App() {
           <Route path="/audits" element={<RecentAuditsPage />} />
           <Route path="/pro/audits" element={<RecentAuditsPage />} />
           <Route path="/templates" element={<TemplatesPage />} />
+          <Route path="/templates/:templateId" element={<TemplateDetailPage />} />
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/blog" element={<BlogPage />} />
 

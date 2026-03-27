@@ -30,7 +30,7 @@ const Header = () => {
     ];
 
     return (
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <nav className="fixed top-0 left-0 right-0 z-50 bg-white/50 backdrop-blur-xl">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-20">
                     {/* Logo */}
@@ -39,12 +39,12 @@ const Header = () => {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center space-x-8">
+                    <div className="hidden md:flex items-center space-x-12 ml-12">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.name}
                                 to={link.path}
-                                className="text-slate-700 hover:text-primary transition-all duration-200 font-medium relative group"
+                                className="text-slate-800 hover:text-primary transition-all duration-200 font-medium relative group"
                             >
                                 {link.name}
                                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-200"></span>
@@ -53,7 +53,7 @@ const Header = () => {
                     </div>
 
                     {/* Auth Buttons & Toggles */}
-                    <div className="hidden md:flex items-center space-x-4">
+                    <div className="hidden md:flex items-center space-x-4 ml-8">
 
                         {/* Pro Mode Demo Toggle */}
                         <div className="flex items-center gap-1 bg-slate-100 p-1 xl:mr-4 rounded-xl border border-slate-200/60 shadow-inner">
@@ -74,7 +74,7 @@ const Header = () => {
                         </div>
 
                         <SignedOut>
-                            <Link to="/sign-in" className="px-4 py-2 text-slate-700 hover:text-primary transition-colors">
+                            <Link to="/sign-in" className="px-4 py-2 text-slate-800 hover:text-primary transition-colors">
                                 Login
                             </Link>
                             <Link to="/sign-up" className="px-6 py-2 bg-gradient-to-r from-green-500 to-blue-600 text-white rounded-lg hover:from-green-600 hover:to-blue-700 transition-all hover:scale-105 shadow-sm">
@@ -89,7 +89,7 @@ const Header = () => {
                     {/* Mobile Menu Button */}
                     <button
                         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                        className="md:hidden p-2 text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                        className="md:hidden p-2 text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
                     >
                         {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                     </button>

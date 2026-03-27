@@ -33,6 +33,9 @@ const schemas = require('./validators/schemas');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Trust proxy (for rate limiting behind reverse proxy)
+app.set('trust proxy', 1);
+
 // Connect to DB
 connectDB();
 
@@ -134,6 +137,12 @@ app.post('/api/suggestions', validate(schemas.suggestionsSchema), suggestionsCon
 
 // User routes
 app.use('/api/users', require('./routes/userRoutes'));
+
+// Template routes
+app.use('/api/templates', require('./routes/templateRoutes'));
+
+// Review routes
+app.use('/api/reviews', require('./routes/reviewRoutes'));
 
 // Audit routes
 app.post('/api/audit', auditLimiter, validate(schemas.runAuditSchema), auditController.runBusinessAudit);

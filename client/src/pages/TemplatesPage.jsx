@@ -1,16 +1,17 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { fetchTemplates } from '../utils/reviewApi';
 import PageWrapper from '../components/layout/PageWrapper';
 import TemplateCard from '../components/templates/TemplateCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, CheckCircle, Smartphone, Users, Lock, Gift, LayoutGrid, List, ChevronDown } from 'lucide-react';
 import doctorImage from '../assets/Doctor_template.png';
 import CoachingImage from '../assets/CoachingT.png';
-import lawyerImage from '../assets/Screenshot 2026-03-16 011803.png';
+import lawyerImage from '../assets/advocateweb.png';
 import portfolioImage from '../assets/Screenshot 2026-03-16 011827.png';
 import artisanImage from '../assets/Screenshot 2026-03-16 011720.png';
 import packrightImage from '../assets/Screenshot 2026-03-16 011704.png';
-import footwearImage from '../assets/Screenshot 2026-03-20 095755.png';
-import banquetImage from '../assets/Screenshot 2026-03-20 101856.png';
+import footwearImage from '../assets/footware.png';
+import banquetImage from '../assets/banquet.png';
 import saloonImage from '../assets/saloontemp.png';
 
 const ALL_CATEGORIES = [
@@ -172,9 +173,31 @@ const TemplatesPage = () => {
     const [sortBy, setSortBy] = useState("Default");
     const [viewMode, setViewMode] = useState("Grid");
     const [isSortOpen, setIsSortOpen] = useState(false);
+    const [templatesData, setTemplatesData] = useState(TEMPLATES_TEXT.templates);
+
+    useEffect(() => {
+        fetchTemplates().then(data => {
+            if (data.success && data.templates) {
+                // Merge the stats with local template data to keep local layout config & images
+                const updatedTemplates = TEMPLATES_TEXT.templates.map(localT => {
+                    const dbT = data.templates.find(t => t.code === localT.code);
+                    if (dbT) {
+                        return {
+                            ...localT,
+                            averageRating: dbT.averageRating || 0,
+                            totalReviews: dbT.totalReviews || 0,
+                            usageCount: dbT.usageCount || 0
+                        };
+                    }
+                    return localT;
+                });
+                setTemplatesData(updatedTemplates);
+            }
+        }).catch(err => console.error("Error fetching template stats:", err));
+    }, []);
 
     const filteredTemplates = useMemo(() => {
-        let result = TEMPLATES_TEXT.templates;
+        let result = templatesData;
 
         if (selectedCategory !== "All Templates") {
             result = result.filter(t => t.category === selectedCategory);
@@ -198,7 +221,7 @@ const TemplatesPage = () => {
         }
 
         return result;
-    }, [searchQuery, selectedCategory, sortBy]);
+    }, [searchQuery, selectedCategory, sortBy, templatesData]);
 
     const handleClearSearch = () => {
         setSearchQuery("");
