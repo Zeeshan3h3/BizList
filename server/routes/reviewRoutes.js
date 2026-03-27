@@ -24,11 +24,11 @@ const voteLimiter = rateLimit({
 // GET reviews for a template
 router.get('/:templateId', reviewController.getReviews);
 
+// POST vote on a review — MUST come before /:templateId to avoid route conflict
+router.post('/:reviewId/vote', voteLimiter, reviewController.voteReview);
+
 // POST new review
 router.post('/:templateId', reviewSubmitLimiter, reviewController.createReview);
-
-// POST vote on a review
-router.post('/:reviewId/vote', voteLimiter, reviewController.voteReview);
 
 // DELETE a review (author only)
 router.delete('/:reviewId', reviewController.deleteReview);
