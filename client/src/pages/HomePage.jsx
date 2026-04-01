@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
-import axios from 'axios';
-import { API_BASE_URL } from '../services/api';
+import { getRecentAudits } from '../services/api';
 import PageWrapper from '../components/layout/PageWrapper';
 import BusinessSearchSelector from '../components/BusinessSearchSelector';
 import HeroSection from '../components/home/HeroSection';
 import AgencyIntro from '../components/home/AgencyIntro';
 import ProblemSection from '../components/home/ProblemSection';
 import PricingSection from '../components/ui/PricingSection';
-
 import FloatingTemplates from '../components/home/FloatingTemplates';
 
 /**
@@ -24,16 +22,11 @@ const HomePage = () => {
 
     useEffect(() => {
         const fetchRecentAudits = async () => {
-            try {
-                const response = await axios.get(`${API_BASE_URL}/audits/recent?mode=business`, { timeout: 60000 });
-                if (response.data && response.data.audits && response.data.audits.length > 0) {
-                    setRecentAudits(response.data.audits.slice(0, 3));
-                }
-            } catch (err) {
-                console.error("Failed to fetch recent audits, falling back to specific examples:", err);
-            } finally {
-                setIsLoadingAudits(false);
+            const response = await getRecentAudits(3);
+            if (response.success && response.data?.audits?.length > 0) {
+                setRecentAudits(response.data.audits.slice(0, 3));
             }
+            setIsLoadingAudits(false);
         };
 
         fetchRecentAudits();

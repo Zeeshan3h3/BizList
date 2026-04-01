@@ -1,32 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { ShieldAlert, ArrowLeft, RefreshCw } from 'lucide-react';
 import { runAudit } from '../services/api';
-import { RefreshCw } from 'lucide-react';
 import PageWrapper from '../components/layout/PageWrapper';
 import LoadingScreen from '../components/LoadingScreen';
 import ResultsSection from '../components/ResultsSection';
-import { ArrowLeft } from 'lucide-react';
 
+// Catches render-time crashes in child components (ResultsSection, etc.)
 class ErrorBoundary extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = { hasError: false, error: null, errorInfo: null };
-    }
-    static getDerivedStateFromError(error) {
+    state = { hasError: false };
+
+    static getDerivedStateFromError() {
         return { hasError: true };
     }
-    componentDidCatch(error, errorInfo) {
-        this.setState({ error, errorInfo });
-    }
+
     render() {
         if (this.state.hasError) {
             return (
-                <div style={{ padding: '20px', background: '#fee2e2', color: '#991b1b', borderRadius: '8px', margin: '20px', fontFamily: 'monospace' }}>
-                    <h2>React UI Crash Details:</h2>
-                    <p><b>{this.state.error && this.state.error.toString()}</b></p>
-                    <pre style={{ overflowX: 'auto', whiteSpace: 'pre-wrap', fontSize: '12px' }}>
-                        {this.state.errorInfo && this.state.errorInfo.componentStack}
-                    </pre>
+                <div className="min-h-screen flex items-center justify-center p-4">
+                    <div className="text-center max-w-md">
+                        <ShieldAlert className="w-12 h-12 text-red-500 mx-auto mb-4" />
+                        <h2 className="text-xl font-bold text-slate-800 mb-2">Something went wrong</h2>
+                        <p className="text-slate-500 mb-6">The results view encountered an unexpected error.</p>
+                        <button
+                            onClick={() => window.location.reload()}
+                            className="px-5 py-2.5 bg-slate-900 text-white rounded-lg text-sm font-semibold hover:bg-slate-700 transition-colors"
+                        >
+                            Reload Page
+                        </button>
+                    </div>
                 </div>
             );
         }
@@ -35,110 +37,100 @@ class ErrorBoundary extends React.Component {
 }
 
 /**
- * ScorePage - Integrates with existing audit system
- * Shows loading then animated results
+ * Shapes the raw API response into the props ResultsSection expects.
+ * Keeps the mapping in one place and makes it easy to unit-test.
  */
+function normalizeAuditData(data, fallbackName, fallbackArea) {
+    return {
+        brandClass: data.brandClass || data.leadType || 'MODERATE',
+        leadType: data.leadType || 'MODERATE',
+        leadColor: data.leadColor || '#EAB308',
+        opportunityReason: data.opportunityReason || '',
+        brandIntelligence: data.brandIntelligence ?? null,
+        totalScore: data.totalScore ?? 0,
+        breakdown: data.breakdown ?? {},
+        layers: data.layers ?? {},
+        websiteStatus: data.websiteStatus || 'none',
+        websiteQualityScore: data.websiteQualityScore ?? 0,
+        businessName: data.businessName || fallbackName,
+        area: data.area || fallbackArea,
+        scrapedAt: data.scrapedAt || new Date().toISOString(),
+        businessImage: data.businessImage ?? null,
+        googleMapsUrl: data.googleMapsUrl ?? null,
+        advancedIntelligence: data.advancedIntelligence ?? null
+    };
+}
+
 const ScorePage = () => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
+
+    const [status, setStatus] = useState('idle'); // idle | loading | success | error
     const [results, setResults] = useState(null);
     const [error, setError] = useState(null);
     const [isCached, setIsCached] = useState(false);
 
-    const businessName = searchParams.get('business');
-    const area = searchParams.get('area');
-    const placeUrl = searchParams.get('placeUrl'); // Get the exact Google Maps URL if provided
+    const businessName = searchParams.get('business') || '';
+    const area = searchParams.get('area') || '';
+    const placeUrl = searchParams.get('placeUrl') || '';
 
-    useEffect(() => {
-        if (businessName && area) {
-            handleAudit();
+    const runAuditRequest = useCallback(async (forceReaudit = false) => {
+        if (!businessName && !placeUrl) {
+            setStatus('error');
+            setError('Missing search parameters. Please go back and try again.');
+            return;
         }
-    }, [businessName, area, placeUrl]);
 
-    const handleAudit = async (forceReaudit = false) => {
-        setLoading(true);
+        setStatus('loading');
         setError(null);
         setIsCached(false);
 
-        console.log('[SCORE PAGE] Starting audit with params:', { businessName, area, placeUrl, forceReaudit });
+        const params = placeUrl
+            ? { placeUrl, businessName, area, forceReaudit }
+            : { businessName, area, forceReaudit };
 
-        try {
-            // If placeUrl is provided, use it for exact business auditing
-            const auditParams = placeUrl
-                ? { placeUrl, businessName, area, forceReaudit }
-                : { businessName, area, forceReaudit };
+        const response = await runAudit(params);
 
-            console.log('[SCORE PAGE] Calling audit API with:', auditParams);
-
-            const response = await runAudit(auditParams);
-
-            console.log('[SCORE PAGE] API Response:', response);
-
-            if (response.success && response.data) {
-                const data = response.data;
-                console.log('[SCORE PAGE] Setting results:', data);
-
-                // Track if result came from cache
-                setIsCached(!!data.cached);
-
-                // Defensive coding: Map the new architecture payload and fallback correctly
-                setResults({
-                    brandClass: data.brandClass || data.leadType || 'MODERATE',
-                    leadType: data.leadType || 'MODERATE',
-                    leadColor: data.leadColor || '#EAB308',
-                    opportunityReason: data.opportunityReason || '',
-                    brandIntelligence: data.brandIntelligence || null,
-                    totalScore: data.totalScore || 0,
-                    breakdown: data.breakdown || {},
-                    layers: data.layers || {},
-                    websiteStatus: data.websiteStatus || 'none',
-                    websiteQualityScore: data.websiteQualityScore || 0,
-                    businessName: data.businessName || businessName,
-                    area: data.area || area,
-                    scrapedAt: data.scrapedAt || new Date().toISOString(),
-                    businessImage: data.businessImage || null,
-                    googleMapsUrl: data.googleMapsUrl || null
-                });
-            } else {
-                console.error('[SCORE PAGE] API Error:', response.error);
-                setError(response.error || 'Failed to fetch audit results');
-            }
-        } catch (err) {
-            console.error('[SCORE PAGE] Exception during audit:', err);
-            setError('An error occurred while fetching results. Please try again.');
-        } finally {
-            setLoading(false);
+        if (response.success && response.data) {
+            setResults(normalizeAuditData(response.data, businessName, area));
+            setIsCached(!!response.data.cached);
+            setStatus('success');
+        } else {
+            setError(response.error || 'Failed to fetch results. Please try again.');
+            setStatus('error');
         }
-    };
+    }, [businessName, area, placeUrl]);
 
-    const handleReaudit = () => {
-        if (window.confirm('Run a fresh audit? This will overwrite the previous results.')) {
-            handleAudit(true);
-        }
-    };
+    useEffect(() => {
+        runAuditRequest();
+    }, [runAuditRequest]);
 
-    if (loading) {
-        return <LoadingScreen />;
-    }
+    if (status === 'loading') return <LoadingScreen />;
 
-    if (error) {
+    if (status === 'error') {
         return (
             <PageWrapper>
-                <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-b from-blue-50 via-white to-green-50">
+                <div className="min-h-[80vh] flex items-center justify-center px-4">
                     <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-                        <div className="w-16 h-16 bg-danger/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <span className="text-3xl">⚠️</span>
+                        <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <ShieldAlert className="w-7 h-7 text-red-500" />
                         </div>
-                        <h2 className="text-2xl font-bold text-slate-800 mb-2">Oops!</h2>
-                        <p className="text-slate-600 mb-6">{error}</p>
-                        <button
-                            onClick={() => navigate('/')}
-                            className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-700 transition-colors inline-flex items-center gap-2"
-                        >
-                            <ArrowLeft size={20} />
-                            Try Again
-                        </button>
+                        <h2 className="text-xl font-bold text-slate-800 mb-2">Audit Failed</h2>
+                        <p className="text-slate-500 mb-6 text-sm">{error}</p>
+                        <div className="flex gap-3 justify-center">
+                            <button
+                                onClick={() => navigate('/')}
+                                className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-slate-200 text-slate-600 text-sm font-semibold hover:bg-slate-50 transition-colors"
+                            >
+                                <ArrowLeft size={16} /> Go Back
+                            </button>
+                            <button
+                                onClick={() => runAuditRequest()}
+                                className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-slate-700 transition-colors"
+                            >
+                                <RefreshCw size={16} /> Retry
+                            </button>
+                        </div>
                     </div>
                 </div>
             </PageWrapper>
@@ -148,18 +140,15 @@ const ScorePage = () => {
     if (!results) {
         return (
             <PageWrapper>
-                <div className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-b from-blue-50 via-white to-green-50">
+                <div className="min-h-[80vh] flex items-center justify-center px-4">
                     <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-                        <h2 className="text-2xl font-bold text-slate-800 mb-2">No Search Data</h2>
-                        <p className="text-slate-600 mb-6">
-                            Please go back and search for a business
-                        </p>
+                        <h2 className="text-xl font-bold text-slate-800 mb-2">No Business Selected</h2>
+                        <p className="text-slate-500 mb-6 text-sm">Please go back and search for a business to audit.</p>
                         <button
                             onClick={() => navigate('/')}
-                            className="px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary-700 transition-colors inline-flex items-center gap-2"
+                            className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-slate-900 text-white text-sm font-semibold hover:bg-slate-700 mx-auto transition-colors"
                         >
-                            <ArrowLeft size={20} />
-                            Back to Home
+                            <ArrowLeft size={16} /> Back to Home
                         </button>
                     </div>
                 </div>
@@ -170,11 +159,10 @@ const ScorePage = () => {
     return (
         <ErrorBoundary>
             <PageWrapper>
-                {/* Results with existing ResultsSection component */}
                 <ResultsSection
                     results={results}
-                    onBookingClick={() => {/* TODO */ }}
-                    onReaudit={handleReaudit}
+                    onBookingClick={() => { }}
+                    onReaudit={() => runAuditRequest(true)}
                     isCached={isCached}
                 />
             </PageWrapper>
@@ -182,4 +170,4 @@ const ScorePage = () => {
     );
 };
 
-export default ScorePage;
+export default memo(ScorePage);

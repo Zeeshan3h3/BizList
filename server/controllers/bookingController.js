@@ -1,65 +1,55 @@
+'use strict';
+
 const Booking = require('../models/Booking');
 
 /**
- * ============================================
- * BOOKING CONTROLLER
- * ============================================
- */
-
-/**
- * Create booking/lead
  * POST /api/bookings
+ * Creates a new consultation booking / lead entry.
  */
 async function createBooking(req, res) {
     try {
         const { name, phone, email, businessName, area, auditId } = req.body;
 
-        // Create booking
-        const booking = new Booking({
+        const booking = await Booking.create({
             name,
             phone,
             email,
             businessName,
             area,
-            auditId,
-            ipAddress: req.ip || req.connection.remoteAddress,
+            auditId: auditId || undefined,
+            ipAddress: req.ip || req.socket?.remoteAddress,
             status: 'new'
         });
 
-        await booking.save();
-
-        console.log(`[BOOKING] New lead received for: ${businessName}`);
-
-        // TODO: Send email notification to your team
-        // TODO: Send SMS confirmation to customer
+        console.log(`[Booking] New lead: ${businessName} — ${phone}`);
 
         return res.status(201).json({
             success: true,
             message: 'Booking received. We will contact you within 24 hours.',
             bookingId: booking._id
         });
-
     } catch (error) {
-        console.error('[BOOKING ERROR]', error);
+        console.error('[Booking] Create failed:', error.message);
         return res.status(500).json({
             success: false,
             error: 'BOOKING_FAILED',
-            message: 'Could not process booking. Please try again.'
+            message: 'Could not process your booking. Please try again.'
         });
     }
 }
 
 /**
- * Get all bookings (admin)
  * GET /api/bookings
+ * Returns all bookings. Protected by admin key middleware in server.js.
+ * Supports optional ?status= filter.
  */
 async function getAllBookings(req, res) {
     try {
-        const status = req.query.status;
-        const query = status ? { status } : {};
+        const query = req.query.status ? { status: req.query.status } : {};
 
         const bookings = await Booking.find(query)
             .sort({ createdAt: -1 })
+            .lean()
             .populate('auditId', 'businessName area healthScore.totalScore');
 
         return res.status(200).json({
@@ -68,16 +58,13 @@ async function getAllBookings(req, res) {
             bookings
         });
     } catch (error) {
-        console.error('[GET BOOKINGS ERROR]', error);
+        console.error('[Booking] Fetch all failed:', error.message);
         return res.status(500).json({
             success: false,
             error: 'FETCH_FAILED',
-            message: 'Could not fetch bookings'
+            message: 'Could not retrieve bookings'
         });
     }
 }
 
-module.exports = {
-    createBooking,
-    getAllBookings
-};
+module.exports = { createBooking, getAllBookings };
