@@ -44,7 +44,8 @@ const HeroSection = () => {
             {/* Headline */}
             <motion.h1
                 variants={itemVariants}
-                className="text-5xl md:text-6xl lg:text-7xl font-heading font-black text-slate-900 tracking-tight mb-6 leading-[1.05]"
+                style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)' }}
+                className="font-heading font-black text-slate-900 tracking-tight mb-6 leading-[1.05]"
             >
                 {HERO_TEXT.headlineStart} <br />
                 <span className="bg-gradient-to-r from-indigo-600 via-blue-600 to-violet-600 bg-clip-text text-transparent pb-2 block">
@@ -79,30 +80,30 @@ const HeroSection = () => {
                     onClick={() => {
                         document.getElementById('audit-tool')?.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="group relative bg-gradient-to-r from-indigo-600 via-blue-600 to-violet-600 hover:from-indigo-500 hover:via-blue-500 hover:to-violet-500 text-white px-10 py-[18px] rounded-2xl font-black shadow-[0_8px_30px_-6px_rgba(79,70,229,0.45)] hover:shadow-[0_12px_45px_-6px_rgba(79,70,229,0.6)] hover:-translate-y-0.5 hover:scale-[1.03] transition-all duration-250 text-lg flex items-center justify-center gap-3"
+                    className="group relative bg-gradient-to-r from-indigo-600 via-blue-600 to-violet-600 hover:from-indigo-500 hover:via-blue-500 hover:to-violet-500 text-white px-10 py-[18px] rounded-2xl font-black shadow-[0_8px_30px_-6px_rgba(79,70,229,0.45)] hover:shadow-[0_12px_45px_-6px_rgba(79,70,229,0.6)] hover:-translate-y-0.5 hover:scale-[1.03] transition-all duration-300 text-lg flex items-center justify-center gap-3"
                 >
-                    <div className="absolute inset-0 bg-white/15 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-250"></div>
-                    <Play className="w-4.5 h-4.5 fill-current relative z-10" />
+                    <div className="absolute inset-0 bg-white/15 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <Play className="w-5 h-5 fill-current relative z-10" />
                     <span className="relative z-10">{HERO_TEXT.button}</span>
                 </button>
 
                 {/* Secondary — See Templates (glass style) */}
                 <button
                     onClick={() => navigate('/templates')}
-                    className="group relative overflow-hidden px-8 py-[18px] rounded-2xl font-bold text-slate-700 hover:text-indigo-600 transition-all duration-250 text-base flex items-center justify-center gap-2 border border-slate-200/80 bg-white/50 backdrop-blur-md shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.02] hover:border-indigo-200/60 hover:bg-indigo-50/40"
+                    className="group relative overflow-hidden px-8 py-[18px] rounded-2xl font-bold text-slate-700 hover:text-indigo-600 transition-all duration-300 text-base flex items-center justify-center gap-2 border border-slate-200/80 bg-white/50 backdrop-blur-md shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:scale-[1.02] hover:border-indigo-200/60 hover:bg-indigo-50/40"
                 >
                     {/* Subtle gradient border shimmer */}
                     <div className="absolute inset-0 bg-gradient-to-r from-indigo-100/0 via-indigo-100/30 to-blue-100/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
-                    <ExternalLink className="w-4.5 h-4.5 relative z-10" />
+                    <ExternalLink className="w-5 h-5 relative z-10" />
                     <span className="relative z-10">See Templates</span>
                 </button>
 
                 {/* Tertiary — Contact (ghost) */}
                 <button
                     onClick={() => navigate('/contact')}
-                    className="px-6 py-[18px] rounded-2xl font-bold text-slate-500 hover:text-indigo-600 transition-all duration-250 text-base flex items-center justify-center gap-2 group hover:scale-[1.02]"
+                    className="px-6 py-[18px] rounded-2xl font-bold text-slate-500 hover:text-indigo-600 transition-all duration-300 text-base flex items-center justify-center gap-2 group hover:scale-[1.02]"
                 >
-                    <Mail className="w-4.5 h-4.5 group-hover:scale-110 transition-transform duration-250" />
+                    <Mail className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
                     <span className="relative">
                         Contact
                         <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-gradient-to-r from-indigo-500 to-blue-500 group-hover:w-full transition-all duration-300 rounded-full"></span>

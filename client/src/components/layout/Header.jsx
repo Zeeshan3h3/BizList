@@ -39,7 +39,7 @@ const Header = () => {
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center space-x-12 ml-12">
+                    <div className="hidden md:flex items-center space-x-6 xl:space-x-10 ml-6 xl:ml-12">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.name}

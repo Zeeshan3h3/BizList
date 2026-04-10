@@ -299,7 +299,7 @@ export default function BusinessSearchSelector({ onAuditStart }) {
                 }
 
             .autocomplete-header svg {
-                stroke - width: 2;
+                stroke-width: 2;
                 }
 
             /* Autocomplete Item */
@@ -315,7 +315,7 @@ export default function BusinessSearchSelector({ onAuditStart }) {
                 }
 
             .autocomplete-item:last-child {
-                border - bottom: none;
+                border-bottom: none;
                 }
 
             .autocomplete-item:hover {
@@ -324,13 +324,13 @@ export default function BusinessSearchSelector({ onAuditStart }) {
                 }
 
             .autocomplete-item svg {
-                flex - shrink: 0;
+                flex-shrink: 0;
             color: #3b82f6;
             stroke-width: 2;
                 }
 
             .autocomplete-item span {
-                font - size: 16px;
+                font-size: 16px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -371,11 +371,11 @@ export default function BusinessSearchSelector({ onAuditStart }) {
                 }
 
             .search-error svg {
-                flex - shrink: 0;
+                flex-shrink: 0;
                 }
 
             .search-loading {
-                text - align: center;
+                text-align: center;
             padding: 40px;
             background: white;
             border-radius: 16px;
@@ -403,11 +403,11 @@ export default function BusinessSearchSelector({ onAuditStart }) {
                 }
 
             .search-results {
-                margin - bottom: 24px;
+                margin-bottom: 24px;
                 }
 
             .results-title {
-                font - size: 20px;
+                font-size: 20px;
             font-weight: 700;
             color: #ffffff;
             margin: 0 0 20px 0;
@@ -440,7 +440,7 @@ export default function BusinessSearchSelector({ onAuditStart }) {
                 }
 
             .selected-business-info svg {
-                flex - shrink: 0;
+                flex-shrink: 0;
                 }
 
             .audit-button {
@@ -459,13 +459,13 @@ export default function BusinessSearchSelector({ onAuditStart }) {
                 }
 
             @media (max-width: 768px) {
-                    .search - inputs {
-                grid - template - columns: 1fr;
+                .search-inputs {
+                grid-template-columns: 1fr;
             gap: 16px;
                     }
 
             .results-grid {
-                grid - template - columns: 1fr;
+                grid-template-columns: 1fr;
                     }
 
             .search-form {
@@ -477,7 +477,7 @@ export default function BusinessSearchSelector({ onAuditStart }) {
                     }
 
             .selected-business-info {
-                flex - direction: column;
+                flex-direction: column;
             gap: 12px;
                     }
                 }

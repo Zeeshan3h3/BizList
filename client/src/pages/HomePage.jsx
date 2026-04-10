@@ -22,11 +22,16 @@ const HomePage = () => {
 
     useEffect(() => {
         const fetchRecentAudits = async () => {
-            const response = await getRecentAudits(3);
-            if (response.success && response.data?.audits?.length > 0) {
-                setRecentAudits(response.data.audits.slice(0, 3));
+            try {
+                const response = await getRecentAudits(3);
+                if (response.success && response.data?.audits?.length > 0) {
+                    setRecentAudits(response.data.audits.slice(0, 3));
+                }
+            } catch (err) {
+                console.error('Failed to load recent audits:', err);
+            } finally {
+                setIsLoadingAudits(false);
             }
-            setIsLoadingAudits(false);
         };
 
         fetchRecentAudits();
@@ -57,7 +62,7 @@ const HomePage = () => {
                         <HeroSection />
 
                         {/* RIGHT COLUMN — Template Universe */}
-                        <div className="w-full relative min-h-[550px] md:min-h-[620px] overflow-visible">
+                        <div className="w-full relative min-h-[300px] md:min-h-[620px] overflow-visible">
                             <FloatingTemplates />
                         </div>
                     </div>
@@ -103,7 +108,7 @@ const HomePage = () => {
             <div className="py-12 bg-slate-50 border-t border-slate-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Agency Intro Component below hero */}
-                    <div className="w-full max-w-4xl mx-auto relative z-40 mb-16 mt-[-100px]">
+                    <div className="w-full max-w-4xl mx-auto relative z-40 mb-16 mt-0 md:mt-[-100px]">
                         <AgencyIntro />
                     </div>
 
@@ -197,7 +202,7 @@ const HomePage = () => {
                     </p>
                     <button
                         onClick={() => {
-                            document.getElementById('check-score')?.scrollIntoView({ behavior: 'smooth' });
+                            document.getElementById('audit-tool')?.scrollIntoView({ behavior: 'smooth' });
                             // Focus the input to prompt interaction
                             setTimeout(() => {
                                 const input = document.querySelector('input[placeholder*="Search for your business"]');

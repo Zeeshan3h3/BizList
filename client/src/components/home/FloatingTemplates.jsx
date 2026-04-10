@@ -160,8 +160,14 @@ const ParallaxShowcase = () => {
 
             {/* ── Background Glow Orbs ── */}
             <div className="absolute inset-0 pointer-events-none overflow-visible">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gradient-radial from-indigo-500/20 via-purple-500/10 to-transparent rounded-full blur-[80px]"></div>
-                <div className="absolute top-[20%] right-[15%] w-[250px] h-[250px] bg-gradient-radial from-cyan-400/15 to-transparent rounded-full blur-[70px] animate-pulse"></div>
+                <div
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] rounded-full blur-[80px]"
+                    style={{ background: 'radial-gradient(circle, rgba(99,102,241,0.2) 0%, rgba(168,85,247,0.1) 50%, transparent 70%)' }}
+                ></div>
+                <div
+                    className="absolute top-[20%] right-[15%] w-[250px] h-[250px] rounded-full blur-[70px] animate-pulse"
+                    style={{ background: 'radial-gradient(circle, rgba(34,211,238,0.15) 0%, transparent 70%)' }}
+                ></div>
             </div>
 
             {/* ── Card Stack ── */}
