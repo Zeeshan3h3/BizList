@@ -11,11 +11,14 @@ const fs = require('fs');
 // Configuration
 const SCRAPER_CONFIG = {
     headless: true, // Set to false to watch the browser (useful for debugging)
-    timeout: 30000, // 30 seconds max wait time
+    timeout: 45000, // Increased to 45 seconds to handle Maps slowness
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
     maxRetries: 3,  // Maximum retry attempts for failed scrapes
     screenshotOnError: process.env.DEBUG_SCRAPER === 'true' // Enable via env variable
 };
+
+// URL Deduplication mechanism for the API
+const activeRequests = new Map(); // URL -> Promise
 
 /**
  * SELECTOR STRATEGIES
@@ -226,8 +229,7 @@ async function scrapeGoogleMaps(businessName, area, attempt = 1) {
                 ...chromium.args,
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--single-process'
+                '--disable-dev-shm-usage'
             ],
             defaultViewport: chromium.defaultViewport,
             executablePath: process.env.NODE_ENV === 'production' ? await chromium.executablePath() : undefined,
@@ -1181,8 +1183,7 @@ async function searchMultipleBusinesses(businessName, area, limit = 5) {
                 ...chromium.args,
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--single-process'
+                '--disable-dev-shm-usage'
             ],
             defaultViewport: chromium.defaultViewport,
             executablePath: process.env.NODE_ENV === 'production' ? await chromium.executablePath() : undefined,
@@ -1238,6 +1239,30 @@ async function searchMultipleBusinesses(businessName, area, limit = 5) {
 
         if (isDirectProfile) {
             console.log('[SEARCH] Google Maps auto-directed to a single business profile.');
+
+            // Check if this is actually a business or just a geographic location
+            const profileData = await page.evaluate(() => {
+                const category = document.querySelector('button[class*="DkEaL"]');
+                const phone = document.querySelector('button[data-item-id*="phone"]');
+                const rating = document.querySelector('div.F7nice');
+                // Cities/regions won't have category, phone, or ratings
+                return {
+                    hasCategory: !!category,
+                    hasPhone: !!phone,
+                    hasRating: !!rating
+                };
+            });
+
+            if (!profileData.hasCategory && !profileData.hasPhone && !profileData.hasRating) {
+                console.log('[SEARCH] Detected geographic location, not a business. Returning no results.');
+                await browser.close();
+                return {
+                    success: false,
+                    error: 'NO_RESULTS',
+                    message: 'Search returned a location, not a business. Please search with a specific business name.',
+                    results: []
+                };
+            }
 
             const name = await page.evaluate(() => document.querySelector('h1')?.textContent?.trim() || 'Exact Match Business');
             const placeUrl = page.url();
@@ -1503,6 +1528,24 @@ async function searchMultipleBusinesses(businessName, area, limit = 5) {
  * @returns {Promise<Object>} Scraped business data
  */
 async function scrapeBusinessByUrl(placeUrl) {
+    // Dedup: if same URL is already being scraped, wait for that result
+    if (activeRequests.has(placeUrl)) {
+        console.log('[SCRAPER] Dedup: waiting for existing scrape of same URL');
+        return activeRequests.get(placeUrl);
+    }
+
+    const promise = _scrapeBusinessByUrl(placeUrl);
+    activeRequests.set(placeUrl, promise);
+
+    try {
+        return await promise;
+    } finally {
+        activeRequests.delete(placeUrl);
+    }
+}
+
+// Internal function that does the actual scraping
+async function _scrapeBusinessByUrl(placeUrl) {
     let browser = null;
     let page = null;
 
@@ -1514,8 +1557,7 @@ async function scrapeBusinessByUrl(placeUrl) {
                 ...chromium.args,
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--single-process'
+                '--disable-dev-shm-usage'
             ],
             defaultViewport: chromium.defaultViewport,
             executablePath: process.env.NODE_ENV === 'production' ? await chromium.executablePath() : undefined,
@@ -1657,8 +1699,7 @@ async function getAutocompletesuggestions(query, area = '') {
                 ...chromium.args,
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
-                '--disable-dev-shm-usage',
-                '--single-process'
+                '--disable-dev-shm-usage'
             ],
             defaultViewport: chromium.defaultViewport,
             executablePath: process.env.NODE_ENV === 'production' ? await chromium.executablePath() : undefined,

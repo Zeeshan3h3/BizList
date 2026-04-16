@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import BusinessCard from './BusinessCard';
 import { API_BASE_URL } from '../services/api';
 import Button from './ui/Button';
@@ -20,17 +20,35 @@ export default function BusinessSearchSelector({ onAuditStart }) {
     const [selectedBusiness, setSelectedBusiness] = useState(null);
     const [isSearching, setIsSearching] = useState(false);
     const [searchError, setSearchError] = useState(null);
+    const [abortController, setAbortController] = useState(null);
 
-    // Autocomplete removed as requested
+    // Cleanup any pending requests when component unmounts
+    useEffect(() => {
+        return () => {
+            if (abortController) {
+                abortController.abort();
+            }
+        };
+    }, [abortController]);
 
 
     const handleSearch = async (e) => {
         e.preventDefault();
 
+        if (isSearching) return; // Prevent double clicks
+
         if (!businessName || !area) {
             setSearchError('Please enter both business name and area');
             return;
         }
+
+        // Cancel previous request if it exists
+        if (abortController) {
+            abortController.abort();
+        }
+
+        const controller = new AbortController();
+        setAbortController(controller);
 
         setIsSearching(true);
         setSearchError(null);
@@ -44,6 +62,7 @@ export default function BusinessSearchSelector({ onAuditStart }) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ businessName, area }),
+                signal: controller.signal
             });
 
             let data;
@@ -56,6 +75,7 @@ export default function BusinessSearchSelector({ onAuditStart }) {
                     throw new Error(`Server error: ${response.status} ${response.statusText}`);
                 }
             } catch (networkError) {
+                if (networkError.name === 'AbortError') return;
                 throw new Error(`Network error: ${networkError.message}`);
             }
 
@@ -70,10 +90,15 @@ export default function BusinessSearchSelector({ onAuditStart }) {
                 setSearchResults(data.results);
             }
         } catch (error) {
+            if (error.name === 'AbortError') {
+                console.log('Search cancelled');
+                return;
+            }
             console.error('Search error:', error);
             setSearchError(error.message || 'Failed to search. Please try again.');
         } finally {
             setIsSearching(false);
+            setAbortController(null);
         }
     };
 

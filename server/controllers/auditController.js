@@ -108,7 +108,7 @@ async function runBusinessAudit(req, res) {
         let googleResult;
         try {
             if (placeUrl) {
-                googleResult = await scrapeBusinessByUrl(placeUrl);
+                googleResult = await addToQueue(scrapeBusinessByUrl, placeUrl);
             } else {
                 googleResult = await addToQueue(scrapeGoogleMaps, businessName, area);
             }
@@ -165,6 +165,27 @@ async function runBusinessAudit(req, res) {
 
         // Data processing
         const rawData = googleResult.data;
+
+        // Validate scraped data is actually a business (not a city/region)
+        if (rawData && (!rawData.reviewCount || rawData.reviewCount === 0) &&
+            !rawData.rating && !rawData.category && !rawData.phone) {
+
+            if (audit) {
+                try {
+                    audit.status = 'failed';
+                    audit.error = 'NOT_A_BUSINESS';
+                    await audit.save();
+                } catch (dbError) {
+                    console.log('[AUDIT] Could not save error to database');
+                }
+            }
+
+            return res.status(404).json({
+                success: false,
+                error: 'NOT_A_BUSINESS',
+                message: 'The selected result appears to be a location, not a business. Please try searching for a specific business name.'
+            });
+        }
 
         let websiteData = null;
         let contactData = {

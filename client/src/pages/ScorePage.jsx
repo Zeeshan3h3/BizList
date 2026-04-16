@@ -75,6 +75,9 @@ const ScorePage = () => {
     const placeUrl = searchParams.get('placeUrl') || '';
 
     const runAuditRequest = useCallback(async (forceReaudit = false) => {
+        // Prevent concurrent runs from effect
+        if (status === 'loading') return;
+
         if (!businessName && !placeUrl) {
             setStatus('error');
             setError('Missing search parameters. Please go back and try again.');
@@ -89,21 +92,32 @@ const ScorePage = () => {
             ? { placeUrl, businessName, area, forceReaudit }
             : { businessName, area, forceReaudit };
 
-        const response = await runAudit(params);
+        try {
+            const response = await runAudit(params);
 
-        if (response.success && response.data) {
-            setResults(normalizeAuditData(response.data, businessName, area));
-            setIsCached(!!response.data.cached);
-            setStatus('success');
-        } else {
-            setError(response.error || 'Failed to fetch results. Please try again.');
+            if (response.success && response.data) {
+                setResults(normalizeAuditData(response.data, businessName, area));
+                setIsCached(!!response.data.cached);
+                setStatus('success');
+            } else {
+                setError(response.error || 'Failed to fetch results. Please try again.');
+                setStatus('error');
+            }
+        } catch (err) {
+            console.error("Audit request failed:", err);
+            setError(err.message || 'Failed to fetch results. Please try again.');
             setStatus('error');
         }
-    }, [businessName, area, placeUrl]);
+    }, [businessName, area, placeUrl]); // remove status from deps so it doesn't re-trigger
 
+    // On mount, run the audit. We use a ref to ensure we only run it once.
+    const hasRun = React.useRef(false);
     useEffect(() => {
-        runAuditRequest();
-    }, [runAuditRequest]);
+        if (!hasRun.current) {
+            hasRun.current = true;
+            runAuditRequest();
+        }
+    }, [businessName, area, placeUrl]); // Intentionally omitting runAuditRequest to break infinite loops
 
     if (status === 'loading') return <LoadingScreen />;
 
