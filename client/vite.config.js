@@ -12,4 +12,7 @@ export default defineConfig({
       },
     },
   },
+  optimizeDeps: {
+    force: true, // Forces Vite to clear and rebuild its cache (fixes invalid syntax errors in dependencies)
+  },
 })
