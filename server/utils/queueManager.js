@@ -67,10 +67,10 @@ const QUEUE_CONFIG = {
 
     /**
      * timeout: Max time (ms) a single task can run
-     * - 120000ms = 120 seconds (increased from 45s to allow slower scrapes)
+     * - 180000ms = 180 seconds — must match (or exceed) the Axios client timeout
      * - If scraper takes longer, it throws a TimeoutError
      */
-    timeout: 120000,
+    timeout: 180000,
 
     /**
      * throwOnTimeout: If a task times out, throw an error instead of returning undefined.
