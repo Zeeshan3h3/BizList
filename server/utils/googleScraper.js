@@ -124,23 +124,24 @@ async function randomWait(baseMs, jitterMs = 500) {
     return new Promise(resolve => setTimeout(resolve, totalWait));
 }
 
-/**
- * Try multiple selectors until one works
- * @param {Page} page - Puppeteer page object
- * @param {string[]} selectors - Array of selectors to try
- * @param {number} timeout - Timeout per selector
- * @returns {Promise<string|null>} - First working selector or null
- */
 async function trySelectors(page, selectors, timeout = 5000) {
-    for (const selector of selectors) {
-        try {
-            await page.waitForSelector(selector, { timeout });
-            console.log(`[SELECTOR] Found element with: ${selector}`);
-            return selector;
-        } catch (e) {
-            // Try next selector
-            continue;
+    try {
+        const combinedSelector = selectors.join(', ');
+        await page.waitForSelector(combinedSelector, { timeout });
+
+        const matchedSelector = await page.evaluate((selArray) => {
+            for (const s of selArray) {
+                if (document.querySelector(s)) return s;
+            }
+            return null;
+        }, selectors);
+
+        if (matchedSelector) {
+            console.log(`[SELECTOR] Found element with: ${matchedSelector}`);
+            return matchedSelector;
         }
+    } catch (e) {
+        // Will return null if timeout happens
     }
     return null;
 }
@@ -1220,11 +1221,12 @@ async function searchMultipleBusinesses(businessName, area, limit = 5) {
 
         console.log('[SEARCH] Search page loaded. Waiting for JavaScript hydration...');
 
-        // Explicity wait for the main h1 to appear, which means Maps has hydrated the React/Angular view
+        // Explicity wait for the main title to appear, which means Maps has hydrated the view
         try {
-            await page.waitForSelector('h1', { timeout: 5000 });
+            const titleSelector = SELECTORS.businessName.join(', ');
+            await page.waitForSelector(titleSelector, { timeout: 5000 });
         } catch (e) {
-            console.log('[SEARCH] Warning: Main h1 didn\'t appear within 5s.');
+            console.log('[SEARCH] Warning: Main business title didn\'t appear within 5s.');
         }
 
         // Check for either search results OR a direct business page
@@ -1589,11 +1591,12 @@ async function _scrapeBusinessByUrl(placeUrl) {
 
         console.log('[SCRAPER] Place page loaded. Waiting for JavaScript hydration...');
 
-        // Explicity wait for the main h1 to appear, which means Maps has hydrated the React/Angular view
+        // Explicity wait for the main title to appear, which means Maps has hydrated the view
         try {
-            await page.waitForSelector('h1', { timeout: 5000 });
+            const titleSelector = SELECTORS.businessName.join(', ');
+            await page.waitForSelector(titleSelector, { timeout: 5000 });
         } catch (e) {
-            console.log('[SCRAPER] Warning: Title h1 didn\'t appear within 5s.');
+            console.log('[SCRAPER] Warning: Main business title didn\'t appear within 5s.');
         }
 
         await randomWait(1500, 500);

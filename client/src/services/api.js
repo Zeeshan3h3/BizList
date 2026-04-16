@@ -8,7 +8,7 @@ const BASE_URL = import.meta.env.VITE_API_URL
 
 const apiClient = axios.create({
     baseURL: BASE_URL,
-    timeout: 90_000, // 90s — audit scraping can take a while
+    timeout: 180_000, // 180s — audit scraping can take a while (especially with retries or queues)
     headers: { 'Content-Type': 'application/json' },
 });
 
